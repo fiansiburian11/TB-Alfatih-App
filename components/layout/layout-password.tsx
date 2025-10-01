@@ -12,6 +12,7 @@ export default function PasswordInput(props: React.ComponentProps<typeof Input>)
       <Input
         {...props}
         type={show ? "text" : "password"}
+        placeholder="password"
         className={`${props.className ?? ""}   border border-[#0892D8]/40
     focus-visible:border-[#067ab1]
     focus-visible:ring-[#067ab1]/50

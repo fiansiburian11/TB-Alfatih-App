@@ -524,7 +524,7 @@ export default function UserTable() {
     );
 
   return (
-    <div className="p-6 bg-[#F7FAFC] rounded-xl shadow-sm">
+    <div className="p-6 bg-white rounded-xl shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 gap-3">
         <DialogTambahUser onUserAdded={() => fetchData(1, search, true)} />

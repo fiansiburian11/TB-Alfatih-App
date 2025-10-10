@@ -5,6 +5,9 @@ import Cookies from "js-cookie";
 // 🔹 Buat instance axios utama
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+  timeout: 60000, // ⏱️ 60 detik agar upload tidak timeout
+  maxBodyLength: Infinity, // 🚀 izinkan file besar
+  maxContentLength: Infinity, // 🚀 izinkan response besar
 });
 
 // 🔹 Tambahkan interceptor untuk otomatis kirim token

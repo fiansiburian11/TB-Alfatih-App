@@ -65,7 +65,7 @@ export default function UserProfileForm() {
 
         const response = await retryRequest(() => apiRequest<ApiResponse>("/private/profile", { method: "GET" }));
 
-        console.log("Profile data received:", response);
+        // console.log("Profile data received:", response);
 
         setUserData(response.data);
         setUsername(response.data.username);
@@ -130,7 +130,6 @@ export default function UserProfileForm() {
         return response.data;
       });
 
-
       // Refresh data profil setelah upload berhasil
       const profileResponse = await retryRequest(() => apiRequest<ApiResponse>("/private/profile", { method: "GET" }));
 
@@ -145,7 +144,7 @@ export default function UserProfileForm() {
       // Show success message
       showSuccessToast("Foto profil berhasil diupdate!");
     } catch (err) {
-      console.error("Error uploading image:", err);
+      // console.error("Error uploading image:", err);
       const errorMessage = err instanceof Error ? err.message : "Gagal mengupload foto profil";
 
       if (errorMessage.includes("Network Error") || errorMessage.includes("timeout") || errorMessage.includes("koneksi")) {
@@ -172,7 +171,7 @@ export default function UserProfileForm() {
         {/* Avatar Section */}
         <div className="flex flex-col items-center">
           <div className="w-full h-60 relative">
-            <Image src={previewImage} alt="avatar" fill className="w-full rounded-sm object-cover" priority onError={() => setPreviewImage("/assets/genteng.jpg")} />
+            <Image src={previewImage} alt="avatar" sizes="fill" fill className="w-full rounded-sm object-cover" priority onError={() => setPreviewImage("/assets/genteng.jpg")} />
             {uploadLoading && (
               <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                 <div className="text-white">Mengupload...</div>

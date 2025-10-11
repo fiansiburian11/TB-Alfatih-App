@@ -295,13 +295,13 @@ export default function FAQManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-white rounded-lg">
+    <div className=" bg-white rounded-lg shadow-md">
       <div className="px-6 py-6">
         <div className="grid grid-cols-12 gap-6">
           {/* Left Sidebar - Tahap List */}
           <div className="col-span-3 space-y-2">
             {/* <div className=" text-white px-4 py-3 w-full  "> */}
-              <DialogTambahFAQ onFAQAdded={handleFAQAdded} />
+            <DialogTambahFAQ onFAQAdded={handleFAQAdded} />
             {/* </div> */}
             <div className="bg-white rounded-lg shadow-sm  overflow-hidden ">
               <div className=" bg-gray-200  p-2 *:text-black ">
@@ -313,7 +313,7 @@ export default function FAQManagement() {
                       // Reset ke halaman 1 ketika berpindah tahap
                       fetchFaqsByTahap(tahap.id, 1);
                     }}
-                    className={`w-full px-4 py-3 text-left text-sm transition-colors  ${selectedTahap === tahap.id ? " font-medium text-gray-900 bg-gray-100 rounded-lg" : "text-gray-700 hover:bg-gray-50 rounded-lg"}`}
+                    className={`w-full px-4 py-3 text-left text-sm transition-colors  ${selectedTahap === tahap.id ? " font-medium text-gray-900 bg-gray-50 rounded-lg" : "text-gray-700 hover:bg-gray-50 rounded-lg"}`}
                   >
                     {tahap.title}
                   </button>
@@ -324,13 +324,13 @@ export default function FAQManagement() {
 
           {/* Right Content - FAQ Details */}
           <div className="col-span-9">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white ">
               {/* Tahap Header */}
               {selectedTahapData && (
-                <div className="bg-blue-50 border-b border-gray-200 px-6 py-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h2 className="text-lg font-semibold text-gray-800 mb-1">{selectedTahapData.title}</h2>
+                <div className="border rounded-lg px-6 py-4">
+                  <div className="flex  items-start justify-between">
+                    <div className="flex-1 ">
+                      <h2 className="text-lg font-semibold text-gray-800 mb-1 ">{selectedTahapData.title}</h2>
                       <p className="text-sm text-gray-600">{selectedTahapData.details || "Tahap ini belum memiliki deskripsi."}</p>
                     </div>
                   </div>
@@ -349,7 +349,7 @@ export default function FAQManagement() {
                       <div key={faq.id} className="border border-gray-200 rounded-lg overflow-hidden">
                         {editingFAQ === faq.id ? (
                           // Edit Mode
-                          <div className="p-4 space-y-3 bg-gray-50">
+                          <div className="p-4 space-y-3 bg-white">
                             {/* Judul FAQ */}
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">Judul FAQ</label>
@@ -380,11 +380,11 @@ export default function FAQManagement() {
                             </div>
 
                             <div className="flex justify-end gap-2">
-                              <button onClick={cancelEdit} className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-100 flex items-center gap-1">
+                              <button onClick={cancelEdit} className="px-3 py-1.5 text-sm border  bg-[#DD3737] rounded-md hover:bg-[#DD3737]/90 text-white flex items-center gap-1">
                                 <X size={14} />
                                 Batal
                               </button>
-                              <button onClick={() => saveEdit(faq.id)} className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center gap-1">
+                              <button onClick={() => saveEdit(faq.id)} className="px-3 py-1.5 text-sm bg-[#0892D8] text-white rounded-md hover:bg-[#0892D8]/80 flex items-center gap-1">
                                 <Save size={14} />
                                 Simpan
                               </button>

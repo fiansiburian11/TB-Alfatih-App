@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
+const path = require("path");
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: "C:\\Users\\bukan\\OneDrive\\Documents\\KULIAH\\FIAN SEMESTER 7\\KP\\app-katalog-tb-alfatih",
+  outputFileTracingRoot: path.join(__dirname),
   images: {
     domains: ["api.rusnandapurnama.com"],
     remotePatterns: [

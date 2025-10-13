@@ -81,15 +81,74 @@ export default function FAQManagement() {
   };
 
   // Fetch data FAQ dengan filter tahap_id dan pagination
-  const fetchFaqsByTahap = async (tahapId: string, page: number = 1) => {
-    try {
-      setIsLoading(true);
+  // const fetchFaqsByTahap = async (tahapId: string, page: number = 1) => {
+  //   try {
+  //     setIsLoading(true);
 
-      // Parameter untuk filter by tahap_id dan pagination
+  //     // Parameter untuk filter by tahap_id dan pagination
+  //     const params = new URLSearchParams({
+  //       page: page.toString(),
+  //       items_per_page: itemsPerPage.toString(),
+  //       tahap_id: tahapId, // Filter by tahap_id
+  //     });
+
+  //     const response = await apiRequest(`/private/faq?${params}`);
+
+  //     let data: FAQ[] = [];
+  //     let paginationData: PaginationInfo = {
+  //       items_per_page: 10,
+  //       page: 1,
+  //       max_page: 1,
+  //       total_data: 0,
+  //     };
+
+  //     // Extract data berdasarkan struktur response
+  //     if (response?.data?.data && Array.isArray(response.data.data)) {
+  //       data = response.data.data;
+  //       paginationData = response.data.pagination;
+  //     } else if (Array.isArray(response?.data)) {
+  //       data = response.data;
+  //     } else if (Array.isArray(response)) {
+  //       data = response;
+  //     }
+
+  //     // Extract pagination info
+  //     if (response?.data?.pagination) {
+  //       paginationData = response.data.pagination;
+  //     }
+
+  //     // console.log(`📊 Data FAQ untuk tahap ${tahapId}, halaman ${page}:`, data);
+  //     // console.log("📄 Pagination info:", paginationData);
+
+  //     setFaqs(data);
+  //     setPagination(paginationData);
+  //   } catch (error) {
+  //     console.error("❌ Gagal mengambil data FAQ:", error);
+  //     setFaqs([]);
+  //     setPagination({
+  //       items_per_page: 10,
+  //       page: 1,
+  //       max_page: 1,
+  //       total_data: 0,
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const fetchFaqsByTahap = async (tahapId: string, page: number = 1, smooth: boolean = false) => {
+    try {
+      if (smooth) {
+        setIsTransitioning(true);
+      } else {
+        setIsLoading(true);
+      }
+
       const params = new URLSearchParams({
         page: page.toString(),
         items_per_page: itemsPerPage.toString(),
-        tahap_id: tahapId, // Filter by tahap_id
+        tahap_id: tahapId,
       });
 
       const response = await apiRequest(`/private/faq?${params}`);
@@ -102,7 +161,6 @@ export default function FAQManagement() {
         total_data: 0,
       };
 
-      // Extract data berdasarkan struktur response
       if (response?.data?.data && Array.isArray(response.data.data)) {
         data = response.data.data;
         paginationData = response.data.pagination;
@@ -112,27 +170,20 @@ export default function FAQManagement() {
         data = response;
       }
 
-      // Extract pagination info
       if (response?.data?.pagination) {
         paginationData = response.data.pagination;
       }
-
-      // console.log(`📊 Data FAQ untuk tahap ${tahapId}, halaman ${page}:`, data);
-      // console.log("📄 Pagination info:", paginationData);
 
       setFaqs(data);
       setPagination(paginationData);
     } catch (error) {
       console.error("❌ Gagal mengambil data FAQ:", error);
-      setFaqs([]);
-      setPagination({
-        items_per_page: 10,
-        page: 1,
-        max_page: 1,
-        total_data: 0,
-      });
     } finally {
-      setIsLoading(false);
+      if (smooth) {
+        setIsTransitioning(false);
+      } else {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -162,9 +213,14 @@ export default function FAQManagement() {
   };
 
   // Handler untuk ganti halaman
+  // const handlePageChange = (page: number) => {
+  //   if (page >= 1 && page <= pagination.max_page) {
+  //     fetchFaqsByTahap(selectedTahap, page);
+  //   }
+  // };
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= pagination.max_page) {
-      fetchFaqsByTahap(selectedTahap, page);
+      fetchFaqsByTahap(selectedTahap, page, true); // ✅ smooth true
     }
   };
 
@@ -344,7 +400,7 @@ export default function FAQManagement() {
                     <p className="text-gray-500">Tidak ada pertanyaan untuk tahap ini.</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className={`space-y-3 transition-all duration-300 ${isTransitioning ? "opacity-50 blur-[1px] pointer-events-none" : "opacity-100 blur-0"}`}>
                     {faqs.map((faq) => (
                       <div key={faq.id} className="border border-gray-200 rounded-lg overflow-hidden">
                         {editingFAQ === faq.id ? (

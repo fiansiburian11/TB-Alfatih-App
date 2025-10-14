@@ -75,66 +75,11 @@ export default function FAQManagement() {
         setSelectedTahap(data[0].id);
       }
     } catch (error) {
-      console.error("Gagal mengambil data tahapan:", error);
+      // console.error("Gagal mengambil data tahapan:", error);
       setTahapan([]);
     }
   };
 
-  // Fetch data FAQ dengan filter tahap_id dan pagination
-  // const fetchFaqsByTahap = async (tahapId: string, page: number = 1) => {
-  //   try {
-  //     setIsLoading(true);
-
-  //     // Parameter untuk filter by tahap_id dan pagination
-  //     const params = new URLSearchParams({
-  //       page: page.toString(),
-  //       items_per_page: itemsPerPage.toString(),
-  //       tahap_id: tahapId, // Filter by tahap_id
-  //     });
-
-  //     const response = await apiRequest(`/private/faq?${params}`);
-
-  //     let data: FAQ[] = [];
-  //     let paginationData: PaginationInfo = {
-  //       items_per_page: 10,
-  //       page: 1,
-  //       max_page: 1,
-  //       total_data: 0,
-  //     };
-
-  //     // Extract data berdasarkan struktur response
-  //     if (response?.data?.data && Array.isArray(response.data.data)) {
-  //       data = response.data.data;
-  //       paginationData = response.data.pagination;
-  //     } else if (Array.isArray(response?.data)) {
-  //       data = response.data;
-  //     } else if (Array.isArray(response)) {
-  //       data = response;
-  //     }
-
-  //     // Extract pagination info
-  //     if (response?.data?.pagination) {
-  //       paginationData = response.data.pagination;
-  //     }
-
-  //     // console.log(`📊 Data FAQ untuk tahap ${tahapId}, halaman ${page}:`, data);
-  //     // console.log("📄 Pagination info:", paginationData);
-
-  //     setFaqs(data);
-  //     setPagination(paginationData);
-  //   } catch (error) {
-  //     console.error("❌ Gagal mengambil data FAQ:", error);
-  //     setFaqs([]);
-  //     setPagination({
-  //       items_per_page: 10,
-  //       page: 1,
-  //       max_page: 1,
-  //       total_data: 0,
-  //     });
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
 
   const [isTransitioning, setIsTransitioning] = useState(false);
   const fetchFaqsByTahap = async (tahapId: string, page: number = 1, smooth: boolean = false) => {
@@ -177,7 +122,7 @@ export default function FAQManagement() {
       setFaqs(data);
       setPagination(paginationData);
     } catch (error) {
-      console.error("❌ Gagal mengambil data FAQ:", error);
+      // console.error("❌ Gagal mengambil data FAQ:", error);
     } finally {
       if (smooth) {
         setIsTransitioning(false);
@@ -201,7 +146,7 @@ export default function FAQManagement() {
 
   // Handle ketika FAQ baru ditambahkan
   const handleFAQAdded = (tahap_id: string) => {
-    // console.log("✅ FAQ baru ditambahkan untuk tahap:", tahap_id);
+    console.log("✅ FAQ baru ditambahkan untuk tahap:", tahap_id);
 
     // Pindah ke tahap yang sesuai dan reset ke halaman 1
     setSelectedTahap(tahap_id);
@@ -250,7 +195,7 @@ export default function FAQManagement() {
       setIsDeleteDialogOpen(false);
       setFaqToDelete(null);
     } catch (error: any) {
-      console.error("Gagal menghapus FAQ:", error);
+      // console.error("Gagal menghapus FAQ:", error);
       showErrorToast(`Gagal menghapus FAQ: ${error.response?.data?.message || error.message}`);
     } finally {
       setIsDeleting(false);
@@ -323,7 +268,7 @@ export default function FAQManagement() {
         setSelectedTahap(editForm.tahap_id);
       }
     } catch (error: any) {
-      console.error("Gagal mengupdate FAQ:", error);
+      // console.error("Gagal mengupdate FAQ:", error);
       showErrorToast(`Gagal mengupdate FAQ: ${error.response?.data?.message || error.message}`);
     }
   };

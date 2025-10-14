@@ -157,7 +157,7 @@ export default function ManagementKategori() {
         }
       }
     } catch (error) {
-      console.error("Gagal mengambil data kategori:", error);
+      // console.error("Gagal mengambil data kategori:", error);
       setError("Gagal mengambil data kategori");
       setKategori([]);
       setPagination({

@@ -108,7 +108,7 @@ export default function KatalogProduk() {
         params.kategori_id = filterParams.kategori;
       }
 
-      console.log("📤 Fetch Inti dengan params:", params);
+      // console.log("📤 Fetch Inti dengan params:", params);
 
       const res = await api.get("/private/product", { params });
 
@@ -120,11 +120,11 @@ export default function KatalogProduk() {
       const data = res.data?.data?.data || [];
       const total = res.data?.data?.pagination?.total_data ?? data.length;
 
-      console.log("✅ Data Inti diterima:", data.length, "item");
+      // console.log("✅ Data Inti diterima:", data.length, "item");
       setBarangInti(data);
       setTotalItemsInti(total);
     } catch (err: any) {
-      console.error("❌ Gagal fetch barang inti:", err);
+      // console.error("❌ Gagal fetch barang inti:", err);
 
       // Handle error berdasarkan type
       const status = err.response?.status;
@@ -133,7 +133,7 @@ export default function KatalogProduk() {
       if (status === 400) {
         if (message?.toLowerCase().includes("akses token tidak valid")) {
           // Biarkan interceptor handle token invalid
-          console.warn("Token invalid, biarkan interceptor handle");
+          // console.warn("Token invalid, biarkan interceptor handle");
         } else {
           // Error 400 lainnya (mungkin parameter filter salah)
           setErrorMessage(`Error filter: ${message || "Parameter tidak valid"}`);
@@ -177,17 +177,17 @@ export default function KatalogProduk() {
         params.kategori_id = filterParams.kategori;
       }
 
-      console.log("📤 Fetch Cross dengan params:", params);
+      // console.log("📤 Fetch Cross dengan params:", params);
 
       const res = await api.get("/private/product", { params });
       const data = res.data?.data?.data || [];
       const total = res.data?.data?.pagination?.total_data ?? data.length;
 
-      console.log("✅ Data Cross diterima:", data.length, "item");
+      // console.log("✅ Data Cross diterima:", data.length, "item");
       setCrossProducts(data);
       setTotalItemsCross(total);
     } catch (err: any) {
-      console.error("❌ Gagal fetch cross selling:", err);
+      // console.error("❌ Gagal fetch cross selling:", err);
 
       // Handle error - lebih sederhana untuk cross selling
       setCrossProducts([]);
@@ -199,17 +199,17 @@ export default function KatalogProduk() {
 
   // Handle search dari FilterSearch
   const handleSearch = (searchFilters: FilterState) => {
-    console.log("🔍 Menerima filter:", searchFilters);
+    // console.log("🔍 Menerima filter:", searchFilters);
 
     // Validasi filter sebelum kirim
     if (searchFilters.kategori && !isValidId(searchFilters.kategori)) {
-      console.error("❌ Kategori ID tidak valid:", searchFilters.kategori);
+      // console.error("❌ Kategori ID tidak valid:", searchFilters.kategori);
       setErrorMessage("Kategori tidak valid");
       return;
     }
 
     if (searchFilters.tahap && !isValidId(searchFilters.tahap)) {
-      console.error("❌ Tahap ID tidak valid:", searchFilters.tahap);
+      // console.error("❌ Tahap ID tidak valid:", searchFilters.tahap);
       setErrorMessage("Tahap tidak valid");
       return;
     }
@@ -229,7 +229,7 @@ export default function KatalogProduk() {
 
   // Handle reset filter
   const handleResetFilters = () => {
-    console.log("🔄 Reset filter");
+    // console.log("🔄 Reset filter");
     const resetFilters = {
       query: "",
       tahap: "",

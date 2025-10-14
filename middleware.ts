@@ -9,6 +9,10 @@ export async function middleware(req: NextRequest) {
   const role = req.cookies.get("role")?.value;
   const { pathname } = req.nextUrl;
 
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   // 🔹 Kalau belum login & akses halaman private → login
   if (!token && (pathname.startsWith("/admin") || pathname.startsWith("/staff") || pathname.startsWith("/supervisor"))) {
     return NextResponse.redirect(new URL("/login", req.url));
@@ -33,7 +37,7 @@ export async function middleware(req: NextRequest) {
         return response;
       }
     } catch (err) {
-      console.error("Verifikasi token gagal:", err);
+      // console.error("Verifikasi token gagal:", err);
       const loginUrl = new URL("/login", req.url);
       const response = NextResponse.redirect(loginUrl);
       response.cookies.delete("token");
@@ -72,5 +76,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/staff/:path*", "/supervisor/:path*", "/login"],
+  matcher: ["/", "/admin/:path*", "/staff/:path*", "/supervisor/:path*", "/login"],
 };

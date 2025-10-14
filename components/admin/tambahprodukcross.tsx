@@ -67,7 +67,7 @@ export default function DialogTambahProdukCross() {
       const data = Array.isArray(response?.data?.data) ? response.data.data : [];
       setTahapan(data);
     } catch (error) {
-      console.error("Gagal fetch tahapan:", error);
+      // console.error("Gagal fetch tahapan:", error);
       setTahapan([]);
     }
   };
@@ -190,7 +190,7 @@ export default function DialogTambahProdukCross() {
 
       return uploadedPaths;
     } catch (error: any) {
-      console.error("Upload error:", error);
+      // console.error("Upload error:", error);
       showErrorToast(error.message || "Gagal upload beberapa gambar");
       throw error;
     } finally {
@@ -278,7 +278,7 @@ export default function DialogTambahProdukCross() {
         img_product: imagePaths, // Array of image paths
       };
 
-      console.log("📤 Mengirim data produk cross-selling:", productData);
+      // console.log("📤 Mengirim data produk cross-selling:", productData);
 
       // Kirim data produk
       const response = await api.post("/private/as/product", productData);
@@ -293,9 +293,9 @@ export default function DialogTambahProdukCross() {
       resetForm();
       setOpen(false);
     } catch (error: any) {
-      console.error("Error adding product:", error);
+      // console.error("Error adding product:", error);
       if (error.response) {
-        console.error("Error response:", error.response.data);
+        // console.error("Error response:", error.response.data);
         showErrorToast(error.response.data?.message || error.message || "Terjadi kesalahan saat menambah produk");
       } else {
         showErrorToast(error.message || "Terjadi kesalahan saat menambah produk");

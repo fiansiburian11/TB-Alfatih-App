@@ -92,21 +92,23 @@ export default function LoginForm() {
       <h1 className="text-center">Masuk Ke Akun Kliksales</h1>
       <Tabs defaultValue="account" className="space-y-3">
         <TabsContent value="account" className="space-y-3">
-          <Input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="border border-[#0892D8]/40 focus-visible:border-[#067ab1]
+          <form onSubmit={handleLogin} className="space-y-3">
+            <Input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="border border-[#0892D8]/40 focus-visible:border-[#067ab1]
               focus-visible:ring-[#067ab1]/50 placeholder-shown:border-[#0892D8]/40
               not-placeholder-shown:border-[#0892D8] placeholder:text-slate-300 bg-slate-50 pr-10"
-          />
+            />
 
-          <PasswordInput value={password} onChange={(e: any) => setPassword(e.target.value)} />
+            <PasswordInput value={password} onChange={(e: any) => setPassword(e.target.value)} />
 
-          <Button onClick={handleLogin} disabled={loading} className="w-full bg-[#0892D8] text-white hover:bg-[#067ab1] font-extralight cursor-pointer">
-            {loading ? "Memproses..." : "Masuk"}
-          </Button>
+            <Button type="submit" disabled={loading} className="w-full bg-[#0892D8] text-white hover:bg-[#067ab1] font-extralight cursor-pointer">
+              {loading ? "Memproses..." : "Masuk"}
+            </Button>
+          </form>
         </TabsContent>
       </Tabs>
     </div>

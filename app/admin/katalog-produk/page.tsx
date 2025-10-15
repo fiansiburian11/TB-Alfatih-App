@@ -9,6 +9,8 @@ import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/axios";
+import { Eye } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -267,7 +269,6 @@ export default function KatalogProduk() {
 
         {/* Error Message */}
         {errorMessage && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{errorMessage}</div>}
-
       </div>
 
       {/* Barang Inti */}
@@ -296,6 +297,7 @@ export default function KatalogProduk() {
                     <th className="text-center font-normal py-3 px-4">Kondisi Peruntukan</th>
                     <th className="text-center font-normal py-3 px-4">Harga Jual</th>
                     <th className="text-center font-normal py-3 px-4">Draft Penawaran</th>
+                    <th className="text-center font-normal py-3 px-4">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -304,11 +306,11 @@ export default function KatalogProduk() {
                     const kategoriName = item.kategori?.name ?? "Tanpa Kategori";
 
                     return (
-                      <tr key={item.id}  className={`cursor-pointer hover:bg-gray-50 ${index === barangInti.length - 1 ? "" : "border-b"}`}>
+                      <tr key={item.id} className={`cursor-pointer hover:bg-gray-50 ${index === barangInti.length - 1 ? "" : "border-b"}`}>
                         <td className="py-3 px-4 font-medium">
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
-                              <span>{item.name}</span>
+                              <span>{item.jenis}</span>
                               {item.prioritas_upselling && <span className="text-yellow-500 text-sm font-medium">⭐</span>}
                             </div>
                             <div className="flex gap-2">
@@ -320,7 +322,14 @@ export default function KatalogProduk() {
                         <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
                         <td className="py-3 px-4 text-center">
-                          <DraftPenawaran />
+                          <DraftPenawaran productId={item.id} />
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <Link href={`/admin/katalog-produk/${item.id}`} passHref>
+                            <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md">
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </Link>
                         </td>
                       </tr>
                     );
@@ -357,6 +366,7 @@ export default function KatalogProduk() {
                     <th className="text-center font-normal py-3 px-4">Kondisi Peruntukan</th>
                     <th className="text-center font-normal py-3 px-4">Harga Jual</th>
                     <th className="text-center font-normal py-3 px-4">Draft Penawaran</th>
+                    <th className="text-center font-normal py-3 px-4">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -381,7 +391,23 @@ export default function KatalogProduk() {
                         <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
                         <td className="py-3 px-4 text-center">
-                          <DraftPenawaran />
+                          <DraftPenawaran productId={item.id} />
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <Link
+                            href={`/admin/katalog-produk/${item.id}`}
+                            prefetch={true} // Enable prefetch untuk loading yang lebih cepat
+                            legacyBehavior
+                          >
+                            <Button
+                              size="icon"
+                              variant="default"
+                              className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md"
+                              onClick={(e) => e.stopPropagation()} // Prevent row click event
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </Link>
                         </td>
                       </tr>
                     );

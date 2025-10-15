@@ -92,7 +92,6 @@ export default function ManagementKategori() {
     }
   };
 
-
   const fetchKategori = async (page: number = currentPage, searchQuery: string = search, showLoading: boolean = true) => {
     try {
       if (showLoading) setIsLoading(true);
@@ -172,7 +171,6 @@ export default function ManagementKategori() {
     }
   };
 
-  
   useEffect(() => {
     fetchTahapan();
     fetchKategori(1, ""); // Reset ke page 1 tanpa search

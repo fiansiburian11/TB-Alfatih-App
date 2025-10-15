@@ -228,7 +228,7 @@ export default function KatalogProduk() {
                     </td>
                     <td className="py-3 px-4">{item.harga}</td>
                     <td className="py-3 px-4">
-                      <DraftPenawaran />
+                      {/* <DraftPenawaran /> */}
                     </td>
                   </tr>
                 ))}
@@ -270,7 +270,7 @@ export default function KatalogProduk() {
                     </td>
                     <td className="py-3 px-4">{item.harga}</td>
                     <td className="py-3 px-4 ">
-                      <DraftPenawaran />
+                      {/* <DraftPenawaran /> */}
                     </td>
                   </tr>
                 ))}

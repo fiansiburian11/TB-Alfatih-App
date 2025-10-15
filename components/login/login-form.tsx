@@ -92,7 +92,13 @@ export default function LoginForm() {
       <h1 className="text-center">Masuk Ke Akun Kliksales</h1>
       <Tabs defaultValue="account" className="space-y-3">
         <TabsContent value="account" className="space-y-3">
-          <form onSubmit={handleLogin} className="space-y-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+            className="space-y-3"
+          >
             <Input
               type="text"
               placeholder="Username"

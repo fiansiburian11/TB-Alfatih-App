@@ -93,8 +93,8 @@ export default function UserProfileForm() {
       const file = e.target.files[0];
 
       // Validasi file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        showErrorToast("File terlalu besar. Maksimum 10MB");
+      if (file.size > 1 * 1024 * 1024) {
+        showErrorToast("File terlalu besar. Maksimum 1MB");
         return;
       }
 
@@ -186,7 +186,7 @@ export default function UserProfileForm() {
           </Button>
 
           <p className="text-xs text-gray-500 mt-1 text-center">
-            Besar file: maksimum 10 mb. <br />
+            Besar file: maksimum 1 mb. <br />
             Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
           </p>
         </div>

@@ -585,7 +585,7 @@ export default function DialogTambahProduk() {
                 <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple className="hidden" id="upload" onChange={handleImageChange} disabled={isUploadingImages} />
                 <label htmlFor="upload" className="cursor-pointer flex flex-col items-center gap-2">
                   <Upload className="w-6 h-6 text-gray-500" />
-                  <p className="text-sm text-gray-500">{isUploadingImages ? "Mengupload gambar..." : "Upload Foto (bisa banyak, jpg/png, max 10 MB per file)"}</p>
+                  <p className="text-sm text-gray-500">{isUploadingImages ? "Mengupload gambar..." : "Upload Foto (bisa banyak, jpg/png, max 1 MB per file)"}</p>
                   <span className="text-xs text-gray-400">Bisa pilih banyak gambar sekaligus</span>
                 </label>
               </div>

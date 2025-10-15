@@ -156,6 +156,48 @@ export default function DialogTambahProdukCross() {
   }, []);
 
   // Upload images ke server
+  // const uploadImages = async (): Promise<string[]> => {
+  //   if (images.length === 0) return [];
+
+  //   setIsUploadingImages(true);
+  //   const uploadedPaths: string[] = [];
+
+  //   try {
+  //     for (let i = 0; i < images.length; i++) {
+  //       // Update status uploading untuk gambar ini
+  //       setImages((prev) => prev.map((img, index) => (index === i ? { ...img, isUploading: true } : img)));
+
+  //       const formData = new FormData();
+  //       formData.append("img_product", images[i].file);
+
+  //       const response = await api.post("/private/as/product/img", formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       });
+
+  //       if (response.data.error) {
+  //         throw new Error(response.data.message || `Gagal upload gambar ${images[i].file.name}`);
+  //       }
+
+  //       const uploadedPath = response.data.data.img_product;
+  //       uploadedPaths.push(uploadedPath);
+
+  //       // Update status uploaded untuk gambar ini
+  //       setImages((prev) => prev.map((img, index) => (index === i ? { ...img, isUploading: false, uploadedPath } : img)));
+
+  //     }
+
+  //     return uploadedPaths;
+  //   } catch (error: any) {
+  //     // console.error("Upload error:", error);
+  //     showErrorToast(error.message || "Gagal upload beberapa gambar");
+  //     throw error;
+  //   } finally {
+  //     setIsUploadingImages(false);
+  //   }
+  // };
+  // Upload images ke server
   const uploadImages = async (): Promise<string[]> => {
     if (images.length === 0) return [];
 
@@ -164,35 +206,35 @@ export default function DialogTambahProdukCross() {
 
     try {
       for (let i = 0; i < images.length; i++) {
-        // Update status uploading untuk gambar ini
         setImages((prev) => prev.map((img, index) => (index === i ? { ...img, isUploading: true } : img)));
 
         const formData = new FormData();
         formData.append("img_product", images[i].file);
 
-        const response = await api.post("/private/as/product/img", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        try {
+          const response = await api.post("/private/as/product/img", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
-        if (response.data.error) {
-          throw new Error(response.data.message || `Gagal upload gambar ${images[i].file.name}`);
+          if (response.data.error) {
+            throw new Error(response.data.message || `Gagal upload ${images[i].file.name}`);
+          }
+
+          const uploadedPath = response.data.data.img_product;
+          uploadedPaths.push(uploadedPath);
+
+          setImages((prev) => prev.map((img, index) => (index === i ? { ...img, isUploading: false, uploadedPath } : img)));
+        } catch (uploadErr: any) {
+          // Tandai bahwa upload gagal agar tombol hapus aktif lagi
+          setImages((prev) => prev.map((img, index) => (index === i ? { ...img, isUploading: false, uploadedPath: undefined } : img)));
+          showErrorToast(uploadErr.message || `Gagal upload gambar ${images[i].file.name}`);
         }
-
-        const uploadedPath = response.data.data.img_product;
-        uploadedPaths.push(uploadedPath);
-
-        // Update status uploaded untuk gambar ini
-        setImages((prev) => prev.map((img, index) => (index === i ? { ...img, isUploading: false, uploadedPath } : img)));
-
       }
 
       return uploadedPaths;
     } catch (error: any) {
-      // console.error("Upload error:", error);
-      showErrorToast(error.message || "Gagal upload beberapa gambar");
-      throw error;
+      showErrorToast("Terjadi kesalahan saat upload gambar");
+      return uploadedPaths;
     } finally {
       setIsUploadingImages(false);
     }
@@ -443,7 +485,7 @@ export default function DialogTambahProdukCross() {
               {/* Preview gambar */}
               {images.length > 0 && (
                 <div className="mb-4">
-                  <Label>Preview Gambar ({images.length} gambar dipilih):</Label>
+                  {/* <Label>Preview Gambar ({images.length} gambar dipilih):</Label> */}
                   <div className="grid grid-cols-3 gap-3 mt-2">
                     {images.map((image, index) => (
                       <div key={index} className="relative group">
@@ -474,12 +516,12 @@ export default function DialogTambahProdukCross() {
                 <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple className="hidden" id="upload" onChange={handleImageChange} disabled={isUploadingImages} />
                 <label htmlFor="upload" className="cursor-pointer flex flex-col items-center gap-2">
                   <Upload className="w-6 h-6 text-gray-500" />
-                  <p className="text-sm text-gray-500">{isUploadingImages ? "Mengupload gambar..." : "Upload Foto (bisa banyak, jpg/png, max 10 MB per file)"}</p>
+                  <p className="text-sm text-gray-500">{isUploadingImages ? "Mengupload gambar..." : "Upload Foto (bisa banyak, jpg/png, max 1 MB per file)"}</p>
                   <span className="text-xs text-gray-400">Bisa pilih banyak gambar sekaligus</span>
                 </label>
               </div>
 
-              {isUploadingImages && <p className="text-xs text-blue-600 mt-2">Sedang mengupload {images.filter((img) => img.isUploading).length} gambar...</p>}
+              {/* {isUploadingImages && <p className="text-xs text-blue-600 mt-2">Sedang mengupload {images.filter((img) => img.isUploading).length} gambar...</p>} */}
             </div>
 
             <div className="space-y-1">

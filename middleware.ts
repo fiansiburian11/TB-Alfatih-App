@@ -13,6 +13,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
+
+
   // 🔹 Kalau belum login & akses halaman private → login
   if (!token && (pathname.startsWith("/admin") || pathname.startsWith("/staff") || pathname.startsWith("/supervisor"))) {
     return NextResponse.redirect(new URL("/login", req.url));

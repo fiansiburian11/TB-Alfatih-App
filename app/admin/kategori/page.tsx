@@ -325,7 +325,7 @@ export default function ManagementKategori() {
   return (
     <div className="p-6">
       <div className="bg-white rounded-xl shadow-sm p-4">
-        <div className="p-6 border-b border-slate-200 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="p-6  border-slate-200 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Tombol Tambah */}
           <Button
             onClick={() => {
@@ -346,23 +346,6 @@ export default function ManagementKategori() {
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0892D8]" />
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Info Pagination */}
-        <div className="flex justify-between items-center mb-4 text-sm text-gray-600 mt-4">
-          <div>
-            Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, pagination.total_data)} dari {pagination.total_data} kategori
-            {search && <span className="ml-2 text-[#0892D8]">(Hasil pencarian: "{search}")</span>}
-          </div>
-          <div className="flex items-center gap-2">
-            <span>Items per page:</span>
-            <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className="border rounded px-2 py-1 text-sm">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
           </div>
         </div>
 
@@ -405,27 +388,50 @@ export default function ManagementKategori() {
           </Table>
         </div>
 
-        {/* Pagination - Mirip dengan contoh */}
-        {pagination.max_page > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-4">
-            {/* Previous Button */}
-            <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8]" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-              <ChevronLeft size={16} />
-            </Button>
+        {/* Pagination */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm text-gray-600 mt-4 mb-4">
+          {/* Baris utama: pakai grid agar tengahnya benar-benar center */}
+          <div className="w-full grid grid-cols-1 sm:grid-cols-3 items-center">
+            {/* Kiri: Info data */}
+            <div className="flex items-center sm:justify-start justify-center">
+              {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, pagination.total_data)} dari {pagination.total_data} kategori
+              {search && <span className="ml-2 text-[#0892D8]">(Hasil pencarian: "{search}")</span>}
+            </div>
 
-            {/* Page Numbers */}
-            {generatePageNumbers().map((page) => (
-              <Button key={page} variant={currentPage === page ? "default" : "outline"} className={currentPage === page ? "bg-[#0892D8] text-white" : ""} onClick={() => handlePageChange(page)}>
-                {page}
-              </Button>
-            ))}
+            {/* Tengah: Pagination */}
+            {pagination.max_page > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-2 sm:mt-0">
+                {/* Previous Button */}
+                <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8]" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                  <ChevronLeft size={16} />
+                </Button>
 
-            {/* Next Button */}
-            <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8]" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === pagination.max_page}>
-              <ChevronRight size={16} />
-            </Button>
+                {/* Page Numbers */}
+                {generatePageNumbers().map((page) => (
+                  <Button key={page} variant={currentPage === page ? "default" : "outline"} className={currentPage === page ? "bg-[#0892D8] text-white" : "border-[#0892D8] text-[#0892D8]"} onClick={() => handlePageChange(page)}>
+                    {page}
+                  </Button>
+                ))}
+
+                {/* Next Button */}
+                <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8]" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === pagination.max_page}>
+                  <ChevronRight size={16} />
+                </Button>
+              </div>
+            )}
+
+            {/* Kanan: Dropdown */}
+            <div className="flex justify-center sm:justify-end items-center gap-2 mt-2 sm:mt-0">
+              <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[#0892D8]">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+              <span>per halaman</span>
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Dialog Form */}

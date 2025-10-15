@@ -245,23 +245,6 @@ export default function UserTable() {
         </div>
       </div>
 
-      {/* Info Pagination */}
-      <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
-        <div>
-          Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, pagination.total_data)} dari {pagination.total_data} user
-          {search && <span className="ml-2 text-[#0892D8]">(Hasil pencarian: "{search}")</span>}
-        </div>
-        <div className="flex items-center gap-2">
-          <span>Items per page:</span>
-          <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className="border rounded px-2 py-1 text-sm">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-        </div>
-      </div>
-
       {/* Table */}
       <div className="bg-white rounded-xl overflow-hidden border border-slate-200">
         <table className="w-full text-sm">
@@ -307,26 +290,56 @@ export default function UserTable() {
       </div>
 
       {/* Pagination */}
-      {pagination.max_page > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-4">
-          {/* Previous Button */}
-          <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8]" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-            <ChevronLeft size={16} />
-          </Button>
-
-          {/* Page Numbers */}
-          {generatePageNumbers().map((page) => (
-            <Button key={page} variant={currentPage === page ? "default" : "outline"} className={currentPage === page ? "bg-[#0892D8] text-white" : ""} onClick={() => handlePageChange(page)}>
-              {page}
-            </Button>
-          ))}
-
-          {/* Next Button */}
-          <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8]" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === pagination.max_page}>
-            <ChevronRight size={16} />
-          </Button>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-4 text-sm text-gray-600">
+        {/* Keterangan jumlah data */}
+        <div className="text-center md:text-left">
+          <span className="font-medium">
+            {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, pagination.total_data)}
+          </span>{" "}
+          dari <span className="font-medium">{pagination.total_data}</span> user
+          {search && <span className="ml-2 text-[#0892D8] italic">(Hasil pencarian: "{search}")</span>}
         </div>
-      )}
+
+        {/* Navigasi pagination */}
+        {pagination.max_page > 1 && (
+          <div className="flex justify-center md:justify-end items-center gap-2">
+            {/* Tombol Sebelumnya */}
+            <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8] hover:bg-[#0892D8]/10" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+              <ChevronLeft size={16} />
+            </Button>
+
+            {/* Nomor halaman */}
+            <div className="flex gap-1">
+              {generatePageNumbers().map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  className={currentPage === page ? "bg-[#0892D8] text-white hover:bg-[#067ab1]" : "border-[#0892D8] text-[#0892D8] hover:bg-[#0892D8]/10"}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </Button>
+              ))}
+            </div>
+
+            {/* Tombol Selanjutnya */}
+            <Button variant="outline" size="icon" className="text-[#0892D8] border-[#0892D8] hover:bg-[#0892D8]/10" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === pagination.max_page}>
+              <ChevronRight size={16} />
+            </Button>
+          </div>
+        )}
+
+        {/* Items per page */}
+        <div className="flex items-center justify-center md:justify-end gap-2">
+          <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#0892D8]">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+          <span className="text-gray-600">per halaman</span>
+        </div>
+      </div>
     </div>
   );
 }

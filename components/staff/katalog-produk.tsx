@@ -165,7 +165,6 @@
 "use client";
 
 import FilterSearch from "@/components/layout/filter-search";
-import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -227,9 +226,7 @@ export default function KatalogProduk() {
                       </ul>
                     </td>
                     <td className="py-3 px-4">{item.harga}</td>
-                    <td className="py-3 px-4">
-                      <DraftPenawaran />
-                    </td>
+                    <td className="py-3 px-4">{/* <DraftPenawaran /> */}</td>
                   </tr>
                 ))}
               </tbody>
@@ -269,9 +266,7 @@ export default function KatalogProduk() {
                       </ul>
                     </td>
                     <td className="py-3 px-4">{item.harga}</td>
-                    <td className="py-3 px-4 ">
-                      <DraftPenawaran />
-                    </td>
+                    <td className="py-3 px-4 ">{/* <DraftPenawaran /> */}</td>
                   </tr>
                 ))}
               </tbody>

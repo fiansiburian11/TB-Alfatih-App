@@ -8,7 +8,8 @@ import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/axios";
-import { LayoutGrid } from "lucide-react";
+import { Eye, LayoutGrid } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -38,6 +39,7 @@ type Produk = {
       jenis: string;
     };
   }[];
+  draft_penawaran?: DraftPenawaran[];
 };
 
 type FilterState = {
@@ -46,7 +48,16 @@ type FilterState = {
   kategori: string;
 };
 
-export default function AdminDashboard() {
+interface DraftPenawaran {
+  id: string;
+  product_id: string;
+  judul: string;
+  chat: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export default function KatalogProduk() {
   const router = useRouter();
 
   // State Barang Inti
@@ -255,72 +266,74 @@ export default function AdminDashboard() {
 
   return (
     <div className="mb-8 space-y-5">
-      <h1 className="text-xl">Selamat datang {}!</h1>
-      <div className="flex flex-col sm:flex-row gap-2 w-full">
-        <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-start">
-              <h1 className="flex text-md items-center gap-1">
-                <div className="bg-[#E9F7FF] p-1 rounded-md">
-                  <LayoutGrid className="text-[#0892D8] h-5 w-5" />
-                </div>
-                Total Produk
-              </h1>
-              <span className="font-semibold">500</span>
+      <div className=" space-y-2">
+        <h1 className="text-xl">Selamat datang {}!</h1>
+        <div className="flex flex-col sm:flex-row gap-2 w-full">
+          <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-start">
+                <h1 className="flex text-md items-center gap-1">
+                  <div className="bg-[#E9F7FF] p-1 rounded-md">
+                    <LayoutGrid className="text-[#0892D8] h-5 w-5" />
+                  </div>
+                  Total Produk
+                </h1>
+                <span className="font-semibold">500</span>
+              </div>
+
+              <p className="text-xs text-gray-600">Tambah produk untuk ditinjau oleh supervisor sebelum masuk katalog</p>
             </div>
 
-            <p className="text-xs text-gray-600">Tambah produk untuk ditinjau oleh supervisor sebelum masuk katalog</p>
+            <div className="flex flex-col gap-2 mt-4">
+              <DialogTambahProduk />
+              <DialogTambahProdukCross />
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2 mt-4">
-            <DialogTambahProduk />
-            <DialogTambahProdukCross />
+          <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
+            <div className="flex flex-col gap-2">
+              <div>
+                <h1 className="flex text-md items-center gap-1">
+                  <div className="bg-[#E9F7FF] p-1 rounded-md">
+                    <LayoutGrid className="text-[#0892D8] h-5 w-5" />
+                  </div>
+                  Buat Sales Order
+                </h1>
+              </div>
+
+              <p className="text-xs text-gray-600">Tawarkan produk ke pelanggan dan Buat sales order baru</p>
+            </div>
+
+            <div className="flex flex-col gap-2 mt-4">
+              <DialogTambahProduk />
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-start">
+                <h1 className="flex text-md items-center gap-1">
+                  <div className="bg-[#E9F7FF] p-1 rounded-md">
+                    <LayoutGrid className="text-[#0892D8] h-5 w-5" />
+                  </div>
+                  Total SO
+                </h1>
+                <span className="font-semibold">1000</span>
+              </div>
+
+              <p className="text-xs text-gray-600">Catatan SO terbaru siap untuk ditinjau</p>
+            </div>
+
+            <div className="flex flex-col gap-2 mt-4">
+              <DialogTambahProdukCross />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
-          <div className="flex flex-col gap-2">
-            <div>
-              <h1 className="flex text-md items-center gap-1">
-                <div className="bg-[#E9F7FF] p-1 rounded-md">
-                  <LayoutGrid className="text-[#0892D8] h-5 w-5" />
-                </div>
-                Buat Sales Order
-              </h1>
-            </div>
-
-            <p className="text-xs text-gray-600">Tawarkan produk ke pelanggan dan Buat sales order baru</p>
-          </div>
-
-          <div className="flex flex-col gap-2 mt-4">
-            <DialogTambahProduk />
-          </div>
-        </div>
-
-        <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-start">
-              <h1 className="flex text-md items-center gap-1">
-                <div className="bg-[#E9F7FF] p-1 rounded-md">
-                  <LayoutGrid className="text-[#0892D8] h-5 w-5" />
-                </div>
-                Total SO
-              </h1>
-              <span className="font-semibold">1000</span>
-            </div>
-
-            <p className="text-xs text-gray-600">Catatan SO terbaru siap untuk ditinjau</p>
-          </div>
-
-          <div className="flex flex-col gap-2 mt-4">
-            <DialogTambahProdukCross />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-md p-2 space-y-2 shadow-md">
         {/* FilterSearch dengan callback */}
-        <FilterSearch onSearch={handleSearch} onReset={handleResetFilters} />
+        <div className="bg-white p-2 rounded-md shadow-sm">
+          <FilterSearch onSearch={handleSearch} onReset={handleResetFilters} />
+        </div>
 
         {/* Error Message */}
         {errorMessage && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{errorMessage}</div>}
@@ -352,6 +365,7 @@ export default function AdminDashboard() {
                     <th className="text-center font-normal py-3 px-4">Kondisi Peruntukan</th>
                     <th className="text-center font-normal py-3 px-4">Harga Jual</th>
                     <th className="text-center font-normal py-3 px-4">Draft Penawaran</th>
+                    <th className="text-center font-normal py-3 px-4">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -364,7 +378,7 @@ export default function AdminDashboard() {
                         <td className="py-3 px-4 font-medium">
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
-                              <span>{item.name}</span>
+                              <span>{item.jenis}</span>
                               {item.prioritas_upselling && <span className="text-yellow-500 text-sm font-medium">⭐</span>}
                             </div>
                             <div className="flex gap-2">
@@ -376,7 +390,14 @@ export default function AdminDashboard() {
                         <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
                         <td className="py-3 px-4 text-center">
-                          <DraftPenawaran />
+                          <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
+                            <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md">
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </Link>
                         </td>
                       </tr>
                     );
@@ -413,6 +434,7 @@ export default function AdminDashboard() {
                     <th className="text-center font-normal py-3 px-4">Kondisi Peruntukan</th>
                     <th className="text-center font-normal py-3 px-4">Harga Jual</th>
                     <th className="text-center font-normal py-3 px-4">Draft Penawaran</th>
+                    <th className="text-center font-normal py-3 px-4">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -437,7 +459,19 @@ export default function AdminDashboard() {
                         <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
                         <td className="py-3 px-4 text-center">
-                          <DraftPenawaran />
+                          <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
+                            <Button
+                              size="icon"
+                              variant="default"
+                              className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md"
+                              onClick={(e) => e.stopPropagation()} // Prevent row click event
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </Link>
                         </td>
                       </tr>
                     );

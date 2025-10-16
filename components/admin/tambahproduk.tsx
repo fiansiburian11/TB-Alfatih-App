@@ -447,7 +447,7 @@ export default function DialogTambahProduk() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#0892D8] hover:bg-[#0892D8]/90">
+        <Button className="bg-[#0892D8] hover:bg-[#0892D8]/90 justify-start">
           <Plus size={18} />
           Tambah Produk Inti
         </Button>

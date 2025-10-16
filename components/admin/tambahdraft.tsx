@@ -1,23 +1,101 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Plus } from "lucide-react";
+import { api } from "@/lib/axios";
+import { showErrorToast, showSuccessToast } from "../layout/snackbar";
 
-export default function TambahDraftModal() {
+interface Produk {
+  id: string;
+  name: string;
+  jenis: string;
+  type: "inti" | "cross_selling";
+}
+
+interface TambahDraftModalProps {
+  onSuccess?: () => void;
+}
+
+export default function TambahDraftModal({ onSuccess }: TambahDraftModalProps) {
   const [open, setOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [judulTemplate, setJudulTemplate] = useState("");
   const [templateChat, setTemplateChat] = useState("");
+  const [produkList, setProdukList] = useState<Produk[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const produkOptions = ["Atap Spandek 3.0", "Granit 60x60", "Semen Merdeka", "Triplek 8 mm"];
+  // Fetch data produk saat modal dibuka
+  useEffect(() => {
+    if (open) {
+      fetchProduk();
+    }
+  }, [open]);
 
-  const handleSubmit = () => {
-    console.log({ selectedProduct, judulTemplate, templateChat });
+  const fetchProduk = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/private/product");
+
+      if (res.data?.data?.data) {
+        setProdukList(res.data.data.data);
+      }
+    } catch (err) {
+      console.error("Gagal fetch data produk:", err);
+      setProdukList([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fungsi untuk mendapatkan nama produk berdasarkan type
+  const getNamaProduk = (produk: Produk) => {
+    return produk.type === "inti" ? produk.jenis : produk.name;
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedProduct || !judulTemplate || !templateChat) {
+      showErrorToast("Harap isi semua field");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await api.post("/private/admin/draft-penawaran", {
+        product_id: selectedProduct,
+        judul: judulTemplate,
+        chat: templateChat,
+      });
+
+      // Reset form
+      setSelectedProduct("");
+      setJudulTemplate("");
+      setTemplateChat("");
+      setOpen(false);
+
+      // Panggil callback jika ada
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      showSuccessToast("Draft penawaran berhasil ditambahkan!");
+    } catch (error) {
+      console.error("Gagal menambah draft penawaran:", error);
+      showErrorToast("Gagal menambah draft penawaran. Silakan coba lagi.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setSelectedProduct("");
+    setJudulTemplate("");
+    setTemplateChat("");
     setOpen(false);
   };
 
@@ -40,14 +118,14 @@ export default function TambahDraftModal() {
             {/* Nama Produk */}
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium">Nama Produk</label>
-              <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+              <Select value={selectedProduct} onValueChange={setSelectedProduct} disabled={loading}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pilih Produk" />
+                  <SelectValue placeholder={loading ? "Memuat produk..." : "Pilih Produk"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {produkOptions.map((p, idx) => (
-                    <SelectItem key={idx} value={p}>
-                      {p}
+                  {produkList.map((produk) => (
+                    <SelectItem key={produk.id} value={produk.id}>
+                      {getNamaProduk(produk)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -79,11 +157,11 @@ export default function TambahDraftModal() {
           </div>
 
           <DialogFooter className="mt-6 flex justify-end gap-2">
-            <Button variant="destructive" onClick={() => setOpen(false)}>
+            <Button variant="destructive" onClick={handleClose} disabled={submitting}>
               Kembali
             </Button>
-            <Button className="bg-[#0892D8] hover:bg-[#0892D8]/90" onClick={handleSubmit}>
-              Tambah Draft
+            <Button className="bg-[#0892D8] hover:bg-[#0892D8]/90" onClick={handleSubmit} disabled={submitting}>
+              {submitting ? "Menambah..." : "Tambah Draft"}
             </Button>
           </DialogFooter>
         </DialogContent>

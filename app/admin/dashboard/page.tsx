@@ -7,7 +7,7 @@ import FilterSearch from "@/components/layout/filter-search";
 import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { api } from "@/lib/axios";
+import { api, apiRequest } from "@/lib/axios";
 import { Eye, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -74,6 +74,23 @@ export default function KatalogProduk() {
   const [itemsPerPageCross, setItemsPerPageCross] = useState(3);
   const [totalItemsCross, setTotalItemsCross] = useState(0);
 
+  //state name user
+  const [name, setName] = useState("");
+
+  const nameUser = async () => {
+    try {
+      const res = await apiRequest("/private/profile", { method: "GET" });
+
+      setName(res.data.username);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    nameUser();
+  });
   // State Filter
   const [filters, setFilters] = useState<FilterState>({
     query: "",
@@ -267,7 +284,7 @@ export default function KatalogProduk() {
   return (
     <div className="mb-8 space-y-5">
       <div className=" space-y-2">
-        <h1 className="text-xl">Selamat datang {}!</h1>
+        <h1 className="text-xl">Selamat datang {name}!</h1>
         <div className="flex flex-col sm:flex-row gap-2 w-full">
           <div className="flex flex-col justify-between bg-white p-4 rounded-md shadow-md flex-1">
             <div className="flex flex-col gap-2">

@@ -377,7 +377,7 @@ export default function ManagementKategori() {
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.tahap_title}</TableCell>
                     <TableCell className="text-center">
-                      <Button size="icon" variant="outline" onClick={() => handleEditKategori(item)} className="bg-[#F9A825] hover:bg-[#F9A825]/90 text-white border-[#F9A825] hover:border-[#F9A825]/90">
+                      <Button size="icon"  onClick={() => handleEditKategori(item)} className="bg-[#FEB941] text-white hover:bg-[#FEB941]/80">
                         <Pencil size={16} />
                       </Button>
                     </TableCell>

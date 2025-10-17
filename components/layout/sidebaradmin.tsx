@@ -98,7 +98,7 @@ export default function SidebarAdminn({ open, setOpen }: SidebarProps) {
   ];
 
   return (
-    <div className={cn("fixed top-0 left-0 h-screen bg-white flex flex-col transition-all duration-300 z-50 border-r border-gray-200", open ? "w-64" : "w-18")}>
+    <div className={cn("fixed top-0 left-0 h-screen bg-white flex flex-col transition-all duration-300 z-50 ", open ? "w-64" : "w-18")}>
       {/* Header */}
       <div className={cn("flex items-center justify-between border-b mx-3", open ? "px-3 py-3" : "py-3 px-3")}>
         <button onClick={() => setOpen(!open)}>

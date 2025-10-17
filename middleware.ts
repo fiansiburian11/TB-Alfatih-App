@@ -13,11 +13,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (token) {
-    if (process.env.NODE_ENV === "development") {
-      return NextResponse.next();
-    }
-  }
+  // if (token) {
+  //   if (process.env.NODE_ENV === "development") {
+  //     return NextResponse.next();
+  //   }
+  // }
 
   // 🔹 Kalau belum login & akses halaman private → login
   if (!token && (pathname.startsWith("/admin") || pathname.startsWith("/staff") || pathname.startsWith("/supervisor"))) {

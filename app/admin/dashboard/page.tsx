@@ -3,6 +3,7 @@
 import PaginationBar from "@/components/admin/paginationkatalog";
 import DialogTambahProduk from "@/components/admin/tambahproduk";
 import DialogTambahProdukCross from "@/components/admin/tambahprodukcross";
+import DialogEditProduk from "@/components/admin/updateproduct";
 import FilterSearch from "@/components/layout/filter-search";
 import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,9 @@ type Produk = {
   kondisi_peruntukan: string;
   harga_jual: number;
   prioritas_upselling?: boolean;
+  ditolak: boolean;
+  diproses: boolean;
+  diterima: boolean;
   kategori?: {
     id: string;
     name: string;
@@ -30,7 +34,7 @@ type Produk = {
       details: string;
     };
   };
-  img_products?: { path: string }[];
+  img_products?: { id: string; path: string }[];
   cross_selling_inti?: {
     product_cross_selling: {
       id: string;
@@ -40,6 +44,8 @@ type Produk = {
     };
   }[];
   draft_penawaran?: DraftPenawaran[];
+  spesifikasi?: string;
+  type?: string;
 };
 
 type FilterState = {
@@ -57,7 +63,7 @@ interface DraftPenawaran {
   updated_at: string;
 }
 
-export default function KatalogProduk() {
+export default function AdminDashboard() {
   const router = useRouter();
 
   // State Barang Inti
@@ -74,6 +80,8 @@ export default function KatalogProduk() {
   const [itemsPerPageCross, setItemsPerPageCross] = useState(3);
   const [totalItemsCross, setTotalItemsCross] = useState(0);
 
+  // State Change Katalog
+  const [isStatusMode, setIsStatusMode] = useState(false);
   //state name user
   const [name, setName] = useState("");
 
@@ -91,6 +99,33 @@ export default function KatalogProduk() {
   useEffect(() => {
     nameUser();
   });
+
+  // Fungsi untuk toggle mode
+  const toggleStatusMode = () => {
+    setIsStatusMode((prev) => !prev);
+  };
+
+  const getStatusPengajuan = (item: Produk) => {
+    if (item.ditolak) return "Ditolak";
+    if (item.diterima) return "Diterima";
+    if (item.diproses) return "Diproses";
+    return "Menunggu";
+  };
+
+  // Fungsi untuk mendapatkan warna badge berdasarkan status
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Diterima":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "Ditolak":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "Diproses":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
   // State Filter
   const [filters, setFilters] = useState<FilterState>({
     query: "",
@@ -136,8 +171,6 @@ export default function KatalogProduk() {
         params.kategori_id = filterParams.kategori;
       }
 
-      // console.log("📤 Fetch Inti dengan params:", params);
-
       const res = await api.get("/private/product", { params });
 
       // Validasi response
@@ -148,12 +181,9 @@ export default function KatalogProduk() {
       const data = res.data?.data?.data || [];
       const total = res.data?.data?.pagination?.total_data ?? data.length;
 
-      // console.log("✅ Data Inti diterima:", data.length, "item");
       setBarangInti(data);
       setTotalItemsInti(total);
     } catch (err: any) {
-      // console.error("❌ Gagal fetch barang inti:", err);
-
       // Handle error berdasarkan type
       const status = err.response?.status;
       const message = err.response?.data?.message;
@@ -161,7 +191,6 @@ export default function KatalogProduk() {
       if (status === 400) {
         if (message?.toLowerCase().includes("akses token tidak valid")) {
           // Biarkan interceptor handle token invalid
-          // console.warn("Token invalid, biarkan interceptor handle");
         } else {
           // Error 400 lainnya (mungkin parameter filter salah)
           setErrorMessage(`Error filter: ${message || "Parameter tidak valid"}`);
@@ -205,18 +234,13 @@ export default function KatalogProduk() {
         params.kategori_id = filterParams.kategori;
       }
 
-      // console.log("📤 Fetch Cross dengan params:", params);
-
       const res = await api.get("/private/product", { params });
       const data = res.data?.data?.data || [];
       const total = res.data?.data?.pagination?.total_data ?? data.length;
 
-      // console.log("✅ Data Cross diterima:", data.length, "item");
       setCrossProducts(data);
       setTotalItemsCross(total);
     } catch (err: any) {
-      // console.error("❌ Gagal fetch cross selling:", err);
-
       // Handle error - lebih sederhana untuk cross selling
       setCrossProducts([]);
       setTotalItemsCross(0);
@@ -227,17 +251,13 @@ export default function KatalogProduk() {
 
   // Handle search dari FilterSearch
   const handleSearch = (searchFilters: FilterState) => {
-    // console.log("🔍 Menerima filter:", searchFilters);
-
     // Validasi filter sebelum kirim
     if (searchFilters.kategori && !isValidId(searchFilters.kategori)) {
-      // console.error("❌ Kategori ID tidak valid:", searchFilters.kategori);
       setErrorMessage("Kategori tidak valid");
       return;
     }
 
     if (searchFilters.tahap && !isValidId(searchFilters.tahap)) {
-      // console.error("❌ Tahap ID tidak valid:", searchFilters.tahap);
       setErrorMessage("Tahap tidak valid");
       return;
     }
@@ -257,7 +277,6 @@ export default function KatalogProduk() {
 
   // Handle reset filter
   const handleResetFilters = () => {
-    // console.log("🔄 Reset filter");
     const resetFilters = {
       query: "",
       tahap: "",
@@ -280,6 +299,12 @@ export default function KatalogProduk() {
   useEffect(() => {
     fetchCross(currentPageCross, itemsPerPageCross, filters);
   }, [currentPageCross, itemsPerPageCross]);
+
+  // Fungsi untuk refresh data setelah edit
+  const handleEditSuccess = () => {
+    fetchInti(currentPageInti, itemsPerPageInti, filters);
+    fetchCross(currentPageCross, itemsPerPageCross, filters);
+  };
 
   return (
     <div className="mb-8 space-y-5">
@@ -410,11 +435,61 @@ export default function KatalogProduk() {
                           <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
-                            <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
+                          <div className="flex justify-center gap-2">
+                            <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
+                              <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </Link>
+                            {/* Dialog Edit Produk */}
+                            <DialogEditProduk
+                              produk={{
+                                id: item.id,
+                                type: "inti",
+                                name: item.name,
+                                jenis: item.jenis,
+                                prioritas_upselling: item.prioritas_upselling || false,
+                                harga_jual: item.harga_jual,
+                                kondisi_peruntukan: item.kondisi_peruntukan,
+                                spesifikasi: item.spesifikasi || "",
+                                kategori_id: item.kategori?.id || "",
+                                // PERBAIKAN: Gunakan img_products langsung dari API tanpa mapping
+                                img_products: item.img_products || [],
+                                kategori: {
+                                  id: item.kategori?.id || "",
+                                  name: item.kategori?.name || "",
+                                  tahap_id: item.kategori?.tahap?.id || "",
+                                  tahap: {
+                                    id: item.kategori?.tahap?.id || "",
+                                    title: item.kategori?.tahap?.title || "",
+                                  },
+                                },
+                                cross_selling_products:
+                                  item.cross_selling_inti?.map((cs) => ({
+                                    id: cs.product_cross_selling.id,
+                                    type: "cross_selling",
+                                    name: cs.product_cross_selling.name,
+                                    jenis: cs.product_cross_selling.jenis,
+                                    prioritas_upselling: false,
+                                    harga_jual: cs.product_cross_selling.harga_jual,
+                                    kondisi_peruntukan: "",
+                                    spesifikasi: "",
+                                    kategori_id: "",
+                                    img_products: [],
+                                    kategori: {
+                                      id: "",
+                                      name: "",
+                                      tahap_id: "",
+                                      tahap: {
+                                        id: "",
+                                        title: "",
+                                      },
+                                    },
+                                  })) || [],
+                              }}
+                              onSuccess={handleEditSuccess}
+                            />
+                          </div>
                         </td>
                       </tr>
                     );
@@ -478,18 +553,41 @@ export default function KatalogProduk() {
                         <td className="py-3 px-4 text-center">
                           <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />
                         </td>
-                        <td className="py-3 px-4 text-center">
+                        <div className="flex justify-center gap-2">
                           <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
-                            <Button
-                              size="icon"
-                              variant="default"
-                              className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md"
-                              onClick={(e) => e.stopPropagation()} // Prevent row click event
-                            >
+                            <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md" onClick={(e) => e.stopPropagation()}>
                               <Eye className="w-4 h-4" />
                             </Button>
                           </Link>
-                        </td>
+
+                          {/* Dialog Edit untuk Cross Selling */}
+                          <DialogEditProduk
+                            produk={{
+                              id: item.id,
+                              type: "cross_selling",
+                              name: item.name,
+                              jenis: item.jenis,
+                              prioritas_upselling: item.prioritas_upselling || false,
+                              harga_jual: item.harga_jual,
+                              kondisi_peruntukan: item.kondisi_peruntukan,
+                              spesifikasi: item.spesifikasi || "",
+                              kategori_id: item.kategori?.id || "",
+                              // PERBAIKAN: Gunakan img_products langsung dari API tanpa mapping
+                              img_products: item.img_products || [],
+                              kategori: {
+                                id: item.kategori?.id || "",
+                                name: item.kategori?.name || "",
+                                tahap_id: item.kategori?.tahap?.id || "",
+                                tahap: {
+                                  id: item.kategori?.tahap?.id || "",
+                                  title: item.kategori?.tahap?.title || "",
+                                },
+                              },
+                              cross_selling_products: [],
+                            }}
+                            onSuccess={handleEditSuccess}
+                          />
+                        </div>
                       </tr>
                     );
                   })}

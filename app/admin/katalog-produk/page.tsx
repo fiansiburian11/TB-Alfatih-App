@@ -4,6 +4,7 @@ import ChangeKatalog from "@/components/admin/changekatalog";
 import PaginationBar from "@/components/admin/paginationkatalog";
 import DialogTambahProduk from "@/components/admin/tambahproduk";
 import DialogTambahProdukCross from "@/components/admin/tambahprodukcross";
+import DialogEditProduk from "@/components/admin/updateproduct";
 import FilterSearch from "@/components/layout/filter-search";
 import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ type Produk = {
       details: string;
     };
   };
-  img_products?: { path: string }[];
+  img_products?: { id: string; path: string }[];
   cross_selling_inti?: {
     product_cross_selling: {
       id: string;
@@ -43,7 +44,9 @@ type Produk = {
       jenis: string;
     };
   }[];
-  draft_penawaran?: DraftPenawaran[]; // Data draft sudah termasuk di sini
+  draft_penawaran?: DraftPenawaran[];
+  spesifikasi?: string;
+  type?: string;
 };
 
 type FilterState = {
@@ -281,6 +284,12 @@ export default function KatalogProduk() {
     fetchCross(currentPageCross, itemsPerPageCross, filters);
   }, [currentPageCross, itemsPerPageCross]);
 
+  // Fungsi untuk refresh data setelah edit
+  const handleEditSuccess = () => {
+    fetchInti(currentPageInti, itemsPerPageInti, filters);
+    fetchCross(currentPageCross, itemsPerPageCross, filters);
+  };
+
   return (
     <div className="mb-8 space-y-5">
       <div className="bg-white rounded-md p-2 space-y-2">
@@ -362,15 +371,64 @@ export default function KatalogProduk() {
                         ) : (
                           <>
                             <td className="py-3 px-4 text-center">
-                              {/* PERBAIKAN: Gunakan draft_penawaran langsung dari item */}
                               <DraftPenawaran productId={item.id} draftData={item.draft_penawaran || []} />
                             </td>
                             <td className="py-3 px-4 text-center">
-                              <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
-                                <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md">
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                              </Link>
+                              <div className="flex justify-center gap-2">
+                                <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
+                                  <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md">
+                                    <Eye className="w-4 h-4" />
+                                  </Button>
+                                </Link>
+                                {/* Dialog Edit Produk */}
+                                <DialogEditProduk
+                                  produk={{
+                                    id: item.id,
+                                    type: "inti",
+                                    name: item.name,
+                                    jenis: item.jenis,
+                                    prioritas_upselling: item.prioritas_upselling || false,
+                                    harga_jual: item.harga_jual,
+                                    kondisi_peruntukan: item.kondisi_peruntukan,
+                                    spesifikasi: item.spesifikasi || "",
+                                    kategori_id: item.kategori?.id || "",
+                                    // PERBAIKAN: Gunakan img_products langsung dari API tanpa mapping
+                                    img_products: item.img_products || [],
+                                    kategori: {
+                                      id: item.kategori?.id || "",
+                                      name: item.kategori?.name || "",
+                                      tahap_id: item.kategori?.tahap?.id || "",
+                                      tahap: {
+                                        id: item.kategori?.tahap?.id || "",
+                                        title: item.kategori?.tahap?.title || "",
+                                      },
+                                    },
+                                    cross_selling_products:
+                                      item.cross_selling_inti?.map((cs) => ({
+                                        id: cs.product_cross_selling.id,
+                                        type: "cross_selling",
+                                        name: cs.product_cross_selling.name,
+                                        jenis: cs.product_cross_selling.jenis,
+                                        prioritas_upselling: false,
+                                        harga_jual: cs.product_cross_selling.harga_jual,
+                                        kondisi_peruntukan: "",
+                                        spesifikasi: "",
+                                        kategori_id: "",
+                                        img_products: [],
+                                        kategori: {
+                                          id: "",
+                                          name: "",
+                                          tahap_id: "",
+                                          tahap: {
+                                            id: "",
+                                            title: "",
+                                          },
+                                        },
+                                      })) || [],
+                                  }}
+                                  onSuccess={handleEditSuccess}
+                                />
+                              </div>
                             </td>
                           </>
                         )}
@@ -425,7 +483,7 @@ export default function KatalogProduk() {
                     const status = getStatusPengajuan(item);
 
                     return (
-                      <tr key={item.id} onClick={() => !isStatusMode && router.push(`/katalog-produk/${item.id}`)} className={`cursor-pointer hover:bg-gray-50 ${index === crossProducts.length - 1 ? "" : "border-b"}`}>
+                      <tr key={item.id} className={`cursor-pointer hover:bg-gray-50 ${index === crossProducts.length - 1 ? "" : "border-b"}`}>
                         <td className="py-3 px-4 font-medium">
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
@@ -448,15 +506,44 @@ export default function KatalogProduk() {
                         ) : (
                           <>
                             <td className="py-3 px-4 text-center">
-                              {/* PERBAIKAN: Gunakan draft_penawaran langsung dari item */}
                               <DraftPenawaran productId={item.id} draftData={item.draft_penawaran || []} />
                             </td>
                             <td className="py-3 px-4 text-center">
-                              <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
-                                <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md" onClick={(e) => e.stopPropagation()}>
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                              </Link>
+                              <div className="flex justify-center gap-2">
+                                <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
+                                  <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md" onClick={(e) => e.stopPropagation()}>
+                                    <Eye className="w-4 h-4" />
+                                  </Button>
+                                </Link>
+
+                                {/* Dialog Edit untuk Cross Selling */}
+                                <DialogEditProduk
+                                  produk={{
+                                    id: item.id,
+                                    type: "cross_selling",
+                                    name: item.name,
+                                    jenis: item.jenis,
+                                    prioritas_upselling: item.prioritas_upselling || false,
+                                    harga_jual: item.harga_jual,
+                                    kondisi_peruntukan: item.kondisi_peruntukan,
+                                    spesifikasi: item.spesifikasi || "",
+                                    kategori_id: item.kategori?.id || "",
+                                    // PERBAIKAN: Gunakan img_products langsung dari API tanpa mapping
+                                    img_products: item.img_products || [],
+                                    kategori: {
+                                      id: item.kategori?.id || "",
+                                      name: item.kategori?.name || "",
+                                      tahap_id: item.kategori?.tahap?.id || "",
+                                      tahap: {
+                                        id: item.kategori?.tahap?.id || "",
+                                        title: item.kategori?.tahap?.title || "",
+                                      },
+                                    },
+                                    cross_selling_products: [],
+                                  }}
+                                  onSuccess={handleEditSuccess}
+                                />
+                              </div>
                             </td>
                           </>
                         )}

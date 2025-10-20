@@ -350,7 +350,7 @@ export default function ManagementKategori() {
         </div>
 
         {/* Table */}
-        <div className="overflow-hidden rounded-xl border">
+        <div className="overflow-hidden ">
           <Table>
             <TableHeader>
               <TableRow className="bg-[#E9F7FF] hover:bg-[#E9F7FF]">

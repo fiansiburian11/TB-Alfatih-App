@@ -378,7 +378,7 @@ export default function DialogTambahProdukCross() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#FEB941] hover:bg-[#FEB941]/90">
+        <Button className="bg-[#FEB941] justify-start hover:bg-[#FEB941]/90">
           <Plus size={18} />
           Tambah Produk Crosselling
         </Button>

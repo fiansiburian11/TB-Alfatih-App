@@ -329,35 +329,37 @@ export default function DraftPenawaranPage() {
         </div>
       ) : (
         <>
-          <table className="min-w-full">
-            <thead className="bg-[#E9F7FF]">
-              <tr>
-                <th className="py-2 px-4 border-b font-normal text-left">NO</th>
-                <th className="text-left py-2 px-4 border-b font-normal">Nama Produk</th>
-                <th className="text-left py-2 px-4 border-b font-normal">Edit Draft Penawaran</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item, index) => {
-                const itemNumber = startIndex + index + 1;
-                return (
-                  <tr key={item.id} className="hover:bg-gray-50">
-                    <td className="py-2 px-4 border-b">{itemNumber}</td>
-                    <td className="py-2 px-4 border-b font-medium">
-                      <div>
-                        <div>{getNamaProduk(item)}</div>
-                      </div>
-                    </td>
+          <div>
+            <table className="min-w-full border-collapse">
+              <thead className="bg-[#E9F7FF]">
+                <tr>
+                  <th className="py-2 px-4 border-b font-normal text-left">NO</th>
+                  <th className="text-left py-2 px-4 border-b font-normal">Nama Produk</th>
+                  <th className="text-left py-2 px-4 border-b font-normal">Edit Draft Penawaran</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentItems.map((item, index) => {
+                  const itemNumber = startIndex + index + 1;
+                  return (
+                    <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="py-2 px-4 border-b">{itemNumber}</td>
+                      <td className="py-2 px-4 border-b font-medium">
+                        <div>
+                          <div>{getNamaProduk(item)}</div>
+                        </div>
+                      </td>
 
-                    <td className="py-2 px-4 border-b space-x-2">
-                      {/* Tombol untuk draft yang sudah ada */}
-                      {item.draft_penawaran && item.draft_penawaran.map((draft) => <EditDraftModal key={draft.id} draft={draft} onSuccess={fetchProduk} />)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      <td className="py-2 px-4 border-b space-x-2">
+                        {/* Tombol untuk draft yang sudah ada */}
+                        {item.draft_penawaran && item.draft_penawaran.map((draft) => <EditDraftModal key={draft.id} draft={draft} onSuccess={fetchProduk} />)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
           {/* Pagination */}
           {totalPages > 0 && (

@@ -3,13 +3,14 @@
 import PaginationBar from "@/components/admin/paginationkatalog";
 import DialogTambahProduk from "@/components/admin/tambahproduk";
 import DialogTambahProdukCross from "@/components/admin/tambahprodukcross";
+import TambahSO from "@/components/admin/tambahso";
 import DialogEditProduk from "@/components/admin/updateproduct";
 import FilterSearch from "@/components/layout/filter-search";
 import DraftPenawaran from "@/components/layout/tooltip-salin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api, apiRequest } from "@/lib/axios";
-import { Eye, LayoutGrid } from "lucide-react";
+import { ArrowRight, Eye, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -80,10 +81,29 @@ export default function AdminDashboard() {
   const [itemsPerPageCross, setItemsPerPageCross] = useState(3);
   const [totalItemsCross, setTotalItemsCross] = useState(0);
 
-  // State Change Katalog
-  const [isStatusMode, setIsStatusMode] = useState(false);
+  //total so state
+  const [totalSO, setTotalSO] = useState<number>(0);
+  const [loadingSO, setLoadingSO] = useState<boolean>(false);
+
   //state name user
   const [name, setName] = useState("");
+
+  //fetch total sales order
+  const fetchTotalSO = async () => {
+    try {
+      setLoadingSO(true);
+      const res = await api.get("/private/sa/sales-order");
+
+      // Ambil total dari pagination
+      const total = res?.data?.data?.pagination?.total_data ?? 0;
+      setTotalSO(total);
+    } catch (error) {
+      console.error("Gagal ambil total sales order:", error);
+      setTotalSO(0);
+    } finally {
+      setLoadingSO(false);
+    }
+  };
 
   const nameUser = async () => {
     try {
@@ -98,33 +118,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     nameUser();
+    fetchTotalSO();
   });
-
-  // Fungsi untuk toggle mode
-  const toggleStatusMode = () => {
-    setIsStatusMode((prev) => !prev);
-  };
-
-  const getStatusPengajuan = (item: Produk) => {
-    if (item.ditolak) return "Ditolak";
-    if (item.diterima) return "Diterima";
-    if (item.diproses) return "Diproses";
-    return "Menunggu";
-  };
-
-  // Fungsi untuk mendapatkan warna badge berdasarkan status
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Diterima":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "Ditolak":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "Diproses":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
 
   // State Filter
   const [filters, setFilters] = useState<FilterState>({
@@ -320,7 +315,7 @@ export default function AdminDashboard() {
                   </div>
                   Total Produk
                 </h1>
-                <span className="font-semibold">500</span>
+                <span className="font-semibold">{totalItemsInti + totalItemsCross}</span>
               </div>
 
               <p className="text-xs text-gray-600">Tambah produk untuk ditinjau oleh supervisor sebelum masuk katalog</p>
@@ -347,7 +342,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="flex flex-col gap-2 mt-4">
-              <DialogTambahProduk />
+              <TambahSO />
             </div>
           </div>
 
@@ -360,14 +355,22 @@ export default function AdminDashboard() {
                   </div>
                   Total SO
                 </h1>
-                <span className="font-semibold">1000</span>
+                <span className="font-semibold">{totalSO}</span>
               </div>
 
               <p className="text-xs text-gray-600">Catatan SO terbaru siap untuk ditinjau</p>
             </div>
 
             <div className="flex flex-col gap-2 mt-4">
-              <DialogTambahProdukCross />
+              <Button
+                onClick={() => {
+                  router.push("/admin/riwayat-sales-order");
+                }}
+                className="flex justify-between bg-accent hover:bg-slate-200 text-black"
+              >
+                Lihat Detail
+                <ArrowRight className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
@@ -553,41 +556,43 @@ export default function AdminDashboard() {
                         <td className="py-3 px-4 text-center">
                           <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />
                         </td>
-                        <div className="flex justify-center gap-2">
-                          <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
-                            <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md" onClick={(e) => e.stopPropagation()}>
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
+                        <td>
+                          <div className="flex justify-center gap-2">
+                            <Link href={`/admin/katalog-produk/${item.id}`} prefetch={false}>
+                              <Button size="icon" variant="default" className="bg-[#0892D8] hover:bg-[#0892D8]/90 text-white rounded-md" onClick={(e) => e.stopPropagation()}>
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </Link>
 
-                          {/* Dialog Edit untuk Cross Selling */}
-                          <DialogEditProduk
-                            produk={{
-                              id: item.id,
-                              type: "cross_selling",
-                              name: item.name,
-                              jenis: item.jenis,
-                              prioritas_upselling: item.prioritas_upselling || false,
-                              harga_jual: item.harga_jual,
-                              kondisi_peruntukan: item.kondisi_peruntukan,
-                              spesifikasi: item.spesifikasi || "",
-                              kategori_id: item.kategori?.id || "",
-                              // PERBAIKAN: Gunakan img_products langsung dari API tanpa mapping
-                              img_products: item.img_products || [],
-                              kategori: {
-                                id: item.kategori?.id || "",
-                                name: item.kategori?.name || "",
-                                tahap_id: item.kategori?.tahap?.id || "",
-                                tahap: {
-                                  id: item.kategori?.tahap?.id || "",
-                                  title: item.kategori?.tahap?.title || "",
+                            {/* Dialog Edit untuk Cross Selling */}
+                            <DialogEditProduk
+                              produk={{
+                                id: item.id,
+                                type: "cross_selling",
+                                name: item.name,
+                                jenis: item.jenis,
+                                prioritas_upselling: item.prioritas_upselling || false,
+                                harga_jual: item.harga_jual,
+                                kondisi_peruntukan: item.kondisi_peruntukan,
+                                spesifikasi: item.spesifikasi || "",
+                                kategori_id: item.kategori?.id || "",
+                                // PERBAIKAN: Gunakan img_products langsung dari API tanpa mapping
+                                img_products: item.img_products || [],
+                                kategori: {
+                                  id: item.kategori?.id || "",
+                                  name: item.kategori?.name || "",
+                                  tahap_id: item.kategori?.tahap?.id || "",
+                                  tahap: {
+                                    id: item.kategori?.tahap?.id || "",
+                                    title: item.kategori?.tahap?.title || "",
+                                  },
                                 },
-                              },
-                              cross_selling_products: [],
-                            }}
-                            onSuccess={handleEditSuccess}
-                          />
-                        </div>
+                                cross_selling_products: [],
+                              }}
+                              onSuccess={handleEditSuccess}
+                            />
+                          </div>
+                        </td>
                       </tr>
                     );
                   })}

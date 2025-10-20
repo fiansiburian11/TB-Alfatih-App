@@ -246,9 +246,9 @@ export default function UserTable() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden border border-slate-200">
+      <div className="bg-white  overflow-hidden">
         <table className="w-full text-sm">
-          <thead>
+          <thead className="border-b">
             <tr className="bg-[#E9F7FF] text-[#0892D8] font-semibold text-left">
               <th className="py-3 px-4 w-10">No</th>
               <th className="py-3 px-4">Username</th>

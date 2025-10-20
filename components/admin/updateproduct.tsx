@@ -656,10 +656,10 @@ export default function DialogEditProduk({ produk, onSuccess }: DialogEditProduk
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={loading || uploadingImages.length > 0}>
+            <Button type="button" variant="destructive" onClick={() => setOpen(false)} disabled={loading || uploadingImages.length > 0}>
               Batal
             </Button>
-            <Button type="submit" disabled={loading || uploadingImages.length > 0 || (produk.type === "inti" && selectedCrossSellingIds.length !== 3)}>
+            <Button type="submit" className="bg-[#0892D8] hover:bg-[#0892D8]/90" disabled={loading || uploadingImages.length > 0 || (produk.type === "inti" && selectedCrossSellingIds.length !== 3)}>
               {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Simpan Perubahan
             </Button>

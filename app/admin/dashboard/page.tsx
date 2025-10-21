@@ -98,7 +98,7 @@ export default function AdminDashboard() {
       const total = res?.data?.data?.pagination?.total_data ?? 0;
       setTotalSO(total);
     } catch (error) {
-      console.error("Gagal ambil total sales order:", error);
+      // console.error("Gagal ambil total sales order:", error);
       setTotalSO(0);
     } finally {
       setLoadingSO(false);
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
 
       setName(res.data.username);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw error;
     }
   };
@@ -119,7 +119,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     nameUser();
     fetchTotalSO();
-  });
+  }, []);
 
   // State Filter
   const [filters, setFilters] = useState<FilterState>({

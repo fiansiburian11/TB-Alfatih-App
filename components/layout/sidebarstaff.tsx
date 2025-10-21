@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Menu, Home, BookOpen, FileText, HelpCircle, User } from "lucide-react";
+import { BookOpen, FileText, HelpCircle, Home, Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
@@ -11,8 +11,8 @@ interface SidebarProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function Sidebar({ open, setOpen }: SidebarProps) {
-  const pathname = usePathname(); 
+export default function SidebarStaff({ open, setOpen }: SidebarProps) {
+  const pathname = usePathname();
 
   const menus = [
     { name: "Dashboard", icon: Home, href: "/dashboard" },

@@ -4,8 +4,8 @@ import { Switch } from "@/components/ui/switch";
 import { api } from "@/lib/axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 import { showErrorToast } from "../layout/snackbar";
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
 export default function UserSwitch({ user, onStatusChange }: { user: any; onStatusChange?: (newStatus: boolean) => void }) {
   const [open, setOpen] = useState(false);
@@ -17,7 +17,6 @@ export default function UserSwitch({ user, onStatusChange }: { user: any; onStat
   useEffect(() => {
     setStatus(user.status);
   }, [user.status]);
-
 
   // Tutup otomatis setelah sukses
   useEffect(() => {
@@ -34,7 +33,7 @@ export default function UserSwitch({ user, onStatusChange }: { user: any; onStat
   const handleStatusChange = async (userId: string, newStatus: boolean) => {
     try {
       setIsLoading(true);
-      await api.put(`/private/admin/users`, { id: userId, status: newStatus });
+      await api.put(`/private/supervisor/users`, { id: userId, status: newStatus });
       setStatus(newStatus);
       setStep("success");
 

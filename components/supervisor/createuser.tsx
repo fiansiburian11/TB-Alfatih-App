@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -8,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { api } from "@/lib/axios";
 import { Plus } from "lucide-react";
-import { useState } from "react";
 import { showErrorToast } from "../layout/snackbar";
 
 type DialogTambahUserProps = {
@@ -24,18 +24,16 @@ export default function DialogTambahUser({ open, onOpenChange, onUserAdded }: Di
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<string>("");
+  // const [role, setRole] = useState<string>("");
   const [status, setStatus] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const roleOptions = [
-    { label: "Super Visor", value: "supervisor" },
-    { label: "Admin", value: "admin" },
-    { label: "Staff", value: "staff" },
-  ];
+  // const roleOptions = [
+  //   { label: "Staff", value: "staff" },
+  // ];
 
   const handleCreate = async () => {
-    if (!username.trim() || !password.trim() || !role) return;
+    if (!username.trim() || !password.trim() ) return;
 
     try {
       setIsSaving(true);
@@ -43,11 +41,11 @@ export default function DialogTambahUser({ open, onOpenChange, onUserAdded }: Di
       const payload = {
         username,
         password,
-        role,
+        // role,
         status,
       };
 
-      const res = await api.post("/private/admin/users", payload);
+      const res = await api.post("/private/supervisor/users", payload);
 
       // Mapping data API agar sesuai tipe User
       const data = res.data.data || res.data; // fallback kalau nested
@@ -69,7 +67,7 @@ export default function DialogTambahUser({ open, onOpenChange, onUserAdded }: Di
       handleOpenChange(false);
       setUsername("");
       setPassword("");
-      setRole("");
+      // setRole("");
       setStatus(false);
     } catch (err: any) {
       console.error("Gagal menambah user:", err.response?.data || err.message);
@@ -96,7 +94,7 @@ export default function DialogTambahUser({ open, onOpenChange, onUserAdded }: Di
           <Input id="password" type="password" placeholder="Masukkan Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label>Role User</Label>
           <div className="flex gap-4">
             {roleOptions.map(({ label, value }) => (
@@ -106,7 +104,7 @@ export default function DialogTambahUser({ open, onOpenChange, onUserAdded }: Di
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="space-y-2">
           <Label>Status</Label>
@@ -118,7 +116,7 @@ export default function DialogTambahUser({ open, onOpenChange, onUserAdded }: Di
         <Button variant="destructive" onClick={() => handleOpenChange(false)} disabled={isSaving}>
           Kembali
         </Button>
-        <Button className="bg-[#0892D8] hover:bg-[#0892D8]/80 text-white" onClick={handleCreate} disabled={isSaving || !username || !password || !role}>
+        <Button className="bg-[#0892D8] hover:bg-[#0892D8]/80 text-white" onClick={handleCreate} disabled={isSaving || !username || !password }>
           {isSaving ? "Menyimpan..." : "Tambah"}
         </Button>
       </DialogFooter>

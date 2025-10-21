@@ -1,3 +1,3 @@
-export default function SuperVisor() {
+export default function DashboardSuperVisor() {
   return <div>SuperVisor</div>;
 }

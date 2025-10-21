@@ -17,7 +17,7 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
   const [username, setUsername] = useState(user.username || "");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState(user.status ?? false);
-  const [role, setRole] = useState<string>("");
+  // const [role, setRole] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
 
   // Gunakan prop jika ada,否则 gunakan state internal
@@ -25,19 +25,19 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
   const handleOpenChange = onOpenChange || setInternalOpen;
 
   // Normalisasi role awal
-  useEffect(() => {
-    if (Array.isArray(user.roles) && user.roles.length > 0) {
-      setRole(user.roles[0].toLowerCase());
-    } else if (typeof user.role === "string") {
-      setRole(user.role.toLowerCase());
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (Array.isArray(user.roles) && user.roles.length > 0) {
+  //     setRole(user.roles[0].toLowerCase());
+  //   } else if (typeof user.role === "string") {
+  //     setRole(user.role.toLowerCase());
+  //   }
+  // }, [user]);
 
-  const roleOptions = [
-    { label: "Super Visor", value: "supervisor" },
-    { label: "Admin", value: "admin" },
-    { label: "Staff", value: "staff" },
-  ];
+  // const roleOptions = [
+  //   { label: "Super Visor", value: "supervisor" },
+  //   { label: "Admin", value: "admin" },
+  //   { label: "Staff", value: "staff" },
+  // ];
 
   // ✅ Simpan ke API
   const handleSave = async () => {
@@ -47,7 +47,7 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
       const payload: any = {
         id: user.id,
         username,
-        role: role || user.role,
+        // role: role || user.role,
         status: status ? "true" : "false",
       };
 
@@ -55,13 +55,13 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
         payload.password = password;
       }
 
-      await api.put(`/private/admin/users`, payload);
+      await api.put(`/private/supervisor/users`, payload);
 
       if (onUserUpdate) {
         onUserUpdate({
           username,
           status,
-          role: role || user.role,
+          // role: role || user.role,
         });
       }
 
@@ -83,11 +83,11 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
       setStatus(user.status ?? false);
 
       // Reset role
-      if (Array.isArray(user.roles) && user.roles.length > 0) {
-        setRole(user.roles[0].toLowerCase());
-      } else if (typeof user.role === "string") {
-        setRole(user.role.toLowerCase());
-      }
+      // if (Array.isArray(user.roles) && user.roles.length > 0) {
+      //   setRole(user.roles[0].toLowerCase());
+      // } else if (typeof user.role === "string") {
+      //   setRole(user.role.toLowerCase());
+      // }
     }
   }, [isOpen, user]);
 
@@ -111,7 +111,7 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
         </div>
 
         {/* Role */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label>Role User</Label>
           <div className="flex gap-4">
             {roleOptions.map(({ label, value }) => (
@@ -127,7 +127,7 @@ export default function DialogEditUser({ user, open, onOpenChange, onUserUpdate 
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Status */}
         <div className="space-y-2">

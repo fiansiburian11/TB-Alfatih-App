@@ -1,16 +1,16 @@
 "use client";
 
+import { showErrorToast } from "@/components/layout/snackbar";
+import DialogTambahUser from "@/components/supervisor/createuser";
+import UserSwitch from "@/components/supervisor/dialogconfirm";
+import DialogEditUser from "@/components/supervisor/dialogedituser";
+import DialogViewUser from "@/components/supervisor/dialogviewuser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api, apiRequest } from "@/lib/axios";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { showErrorToast } from "../layout/snackbar";
-import DialogTambahUser from "./createuser";
-import UserSwitch from "./dialogconfirm";
-import DialogEditUser from "./dialogedituser";
-import DialogViewUser from "./dialogviewuser";
 
 type User = {
   id: string;
@@ -30,7 +30,7 @@ type PaginationInfo = {
   total_data: number;
 };
 
-export default function UserTable() {
+export default function UserSupervisor() {
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -71,7 +71,7 @@ export default function UserTable() {
         ...(searchQuery && { search: searchQuery }),
       });
 
-      const response = await apiRequest(`/private/users?${params}`);
+      const response = await apiRequest(`/private/supervisor/users?${params}`);
 
       if (response && response.data && Array.isArray(response.data.data)) {
         const usersData = response.data.data.map((user: any) => ({
@@ -170,7 +170,7 @@ export default function UserTable() {
     }
 
     try {
-      await api.put(`/private/admin/users`, {
+      await api.put(`/private/supervisor/users`, {
         id: userId,
         status: newStatus,
       });

@@ -13,7 +13,6 @@ export default function Topbar() {
   // Mapping judul sesuai path
   const titles: Record<string, string> = {
     "/dashboard": "Dashboard",
-    "/katalog-produk": "Katalog Produk",
     "/riwayat-sales-order": "Riwayat Pesanan",
     "/draft-penawaran": "Draft Penawaran",
     "/faq": "FAQ",

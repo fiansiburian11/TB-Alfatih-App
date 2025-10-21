@@ -8,8 +8,7 @@ import { apiRequest } from "@/lib/axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
-import { showSuccessToast } from "../layout/snackbar";
+import { showErrorToast, showSuccessToast } from "../layout/snackbar";
 
 type LoginResponse = {
   status: number;
@@ -39,7 +38,7 @@ export default function LoginForm() {
   async function handleLogin() {
     // 🧩 Validasi sebelum kirim request
     if (!username || !password) {
-      toast.error("Username dan password tidak boleh kosong");
+      showErrorToast("Username dan password tidak boleh kosong");
       return;
     }
 
@@ -80,7 +79,7 @@ export default function LoginForm() {
           break;
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Username atau password salah");
+      showErrorToast(err.response?.data?.message || "Username atau password salah");
     } finally {
       setLoading(false);
     }

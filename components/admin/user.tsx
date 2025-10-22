@@ -71,7 +71,7 @@ export default function UserTable() {
         ...(searchQuery && { search: searchQuery }),
       });
 
-      const response = await apiRequest(`/private/users?${params}`);
+      const response = await apiRequest(`/private/users?desc=true&${params}`);
 
       if (response && response.data && Array.isArray(response.data.data)) {
         const usersData = response.data.data.map((user: any) => ({

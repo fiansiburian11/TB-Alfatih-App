@@ -1,6 +1,6 @@
 "use client";
 
-import { showSuccessToast } from "@/components/layout/snackbar";
+import { showErrorToast, showSuccessToast } from "@/components/layout/snackbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -265,7 +265,7 @@ export default function TambahSO({ onSuccess }: TambahSOProps) {
       }
     } catch (error) {
       console.error("Gagal membuat SO:", error);
-      showSuccessToast("Gagal membuat Sales Order");
+      showErrorToast("Gagal membuat Sales Order");
     }
   };
 

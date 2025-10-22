@@ -151,7 +151,7 @@ export default function PengajuanProduk() {
       setLoading(true);
       setError(null);
 
-      const res = await api.get("/private/product", {
+      const res = await api.get("/private/product?desc=true", {
         params: {
           page,
           items_per_page: limit,

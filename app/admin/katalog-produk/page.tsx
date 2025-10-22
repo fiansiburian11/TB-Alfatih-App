@@ -155,7 +155,7 @@ export default function KatalogProduk() {
         params.kategori_id = filterParams.kategori;
       }
 
-      const res = await api.get("/private/product", { params });
+      const res = await api.get("/private/product?desc=true", { params });
 
       // Validasi response
       if (!res.data) {
@@ -218,7 +218,7 @@ export default function KatalogProduk() {
         params.kategori_id = filterParams.kategori;
       }
 
-      const res = await api.get("/private/product", { params });
+      const res = await api.get("/private/product?desc=true", { params });
       const data = res.data?.data?.data || [];
       const total = res.data?.data?.pagination?.total_data ?? data.length;
 

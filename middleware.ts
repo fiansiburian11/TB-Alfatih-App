@@ -1,4 +1,3 @@
-
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -13,6 +12,11 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const role = req.cookies.get("role")?.value;
   const { pathname } = req.nextUrl;
+
+  //tidak perlu login untuk review
+  if (pathname.startsWith("/review")) {
+    return NextResponse.next();
+  }
 
   // 🔸 1. Arahkan "/" ke "/login"
   if (pathname === "/") {

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { FileText, HelpCircle, Home, Menu, User, User2 } from "lucide-react";
+import { FileText, Home, Menu, User, User2, UserStar } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect } from "react";
@@ -32,7 +32,7 @@ export default function SidebarSV({ open, setOpen }: SidebarProps) {
     { name: "User", icon: User2, href: "/supervisor/user" },
     { name: "Riwayat Sales Order", icon: FileText, href: "/supervisor/riwayat-sales-order" },
     { name: "Pengajuan Produk", icon: FileText, href: "/supervisor/pengajuan-produk" },
-    { name: "Review & Saran", icon: HelpCircle, href: "/supervisor/review-saran" },
+    { name: "Review & Saran", icon: UserStar, href: "/supervisor/review-saran" },
     { name: "Profile Saya", icon: User, href: "/supervisor/profile-saya" },
   ];
 

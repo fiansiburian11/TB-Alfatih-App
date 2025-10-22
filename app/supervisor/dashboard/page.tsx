@@ -1,3 +1,3 @@
 export default function DashboardSuperVisor() {
-  return <div>SuperVisor</div>;
+  return <div>Dashboard SuperVisor</div>;
 }

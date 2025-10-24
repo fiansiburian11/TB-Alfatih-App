@@ -384,7 +384,7 @@ export default function DialogTambahProdukCross() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl justify-start">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl">
         <DialogHeader>
           <DialogTitle>Tambah Produk Cross Selling Baru</DialogTitle>
         </DialogHeader>

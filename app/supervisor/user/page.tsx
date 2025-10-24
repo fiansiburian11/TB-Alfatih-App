@@ -332,7 +332,7 @@ export default function UserSupervisor() {
 
         {/* Items per page */}
         <div className="flex items-center justify-center md:justify-end gap-2">
-          <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#0892D8]">
+          <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))} className="border border-gray-300 rounded-md px-2 py-1 text-sm">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>

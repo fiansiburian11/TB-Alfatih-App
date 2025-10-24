@@ -12,13 +12,13 @@ export default function Topbar() {
 
   // Mapping judul sesuai path
   const titles: Record<string, string> = {
-    "/dashboard": "Dashboard",
-    "/katalog-produk": "Katalog Produk",
-    "/riwayat-sales-order": "Riwayat Pesanan",
-    "/draft-penawaran": "Draft Penawaran",
-    "/faq": "FAQ",
-    "/profile-saya": "Profile Saya",
-    "/user": "User",
+    "/staff/dashboard": "Dashboard",
+    "/staff/katalog-produk": "Katalog Produk",
+    "/staff/riwayat-sales-order": "Riwayat Pesanan",
+    "/staff/draft-penawaran": "Draft Penawaran",
+    "/staff/faq": "FAQ",
+    "/staff/profile-saya": "Profile Saya",
+    "/staff/user": "User",
   };
 
   const title = titles[pathname] || "Kliksales";

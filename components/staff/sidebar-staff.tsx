@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "../layout/sidebarstaff";
+import SidebarStaf from "../layout/sidebarstaff";
 import Topbar from "./topbarstaff";
 
 export default function SidebarStaff({ children }: { children: React.ReactNode }) {
@@ -11,7 +11,7 @@ export default function SidebarStaff({ children }: { children: React.ReactNode }
     <div>
       {/* sidebar */}
       <div className={`fixed top-0 left-0 h-full transition-all duration-300 ${sidebarWidth}`}>
-        <Sidebar open={open} setOpen={setOpen} />
+        <SidebarStaf open={open} setOpen={setOpen} />
       </div>
 
       {/* content */}

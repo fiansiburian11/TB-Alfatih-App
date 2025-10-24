@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api, apiRequest } from "@/lib/axios";
 import { ArrowRight, Eye, LayoutGrid } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -351,7 +352,7 @@ export default function AdminDashboard() {
               <div className="flex justify-between items-start">
                 <h1 className="flex text-md items-center gap-1">
                   <div className="bg-[#E9F7FF] p-1 rounded-md">
-                    <LayoutGrid className="text-[#0892D8] h-5 w-5" />
+                    <Image src="/assets/totalso.png" alt="so" width={20} height={20} />
                   </div>
                   Total SO
                 </h1>

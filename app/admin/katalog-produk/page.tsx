@@ -65,7 +65,6 @@ interface DraftPenawaran {
 }
 
 export default function KatalogProduk() {
-  const router = useRouter();
 
   // State Barang Inti
   const [barangInti, setBarangInti] = useState<Produk[]>([]);
@@ -361,7 +360,7 @@ export default function KatalogProduk() {
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
+                        <td className="py-3 px-4 text-sm">{(item.kondisi_peruntukan || "").toString().replace(/\\n/g, "\n").trim()}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
 
                         {isStatusMode ? (
@@ -496,7 +495,7 @@ export default function KatalogProduk() {
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
+                        <td className="py-3 px-4 text-sm">{(item.kondisi_peruntukan || "").toString().replace(/\\n/g, "\n").trim()}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
 
                         {isStatusMode ? (

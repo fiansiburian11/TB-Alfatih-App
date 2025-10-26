@@ -433,7 +433,7 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
+                        <td className="py-3 px-4 text-sm">{(item.kondisi_peruntukan || "").toString().replace(/\\n/g, "\n").trim()}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
                         <td className="py-3 px-4 text-center">
                           <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />
@@ -552,7 +552,7 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-sm">{item.kondisi_peruntukan || "-"}</td>
+                        <td className="py-3 px-4 text-sm">{(item.kondisi_peruntukan || "").toString().replace(/\\n/g, "\n").trim()}</td>
                         <td className="py-3 px-4 text-sm">{fmtRp.format(item.harga_jual || 0)}</td>
                         <td className="py-3 px-4 text-center">
                           <DraftPenawaran productId={item.id} draftData={item.draft_penawaran} />

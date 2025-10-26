@@ -132,7 +132,6 @@
 //       ) : (
 //         <>
 //           <div>
-           
 
 //             <table className="min-w-full border-collapse">
 //               <thead className="bg-[#E9F7FF]">
@@ -413,12 +412,6 @@ export default function DraftPenawaranPage() {
                         <td className="py-2 px-4 border-b font-medium">
                           <div>
                             <div>{getNamaProduk(item)}</div>
-                            {item.kategori && (
-                              <div className="text-sm text-gray-500">
-                                {item.kategori.name}
-                                {item.kategori.tahap && ` - Tahap ${item.kategori.tahap.numbers}: ${item.kategori.tahap.title}`}
-                              </div>
-                            )}
                           </div>
                         </td>
                         <td className="py-2 px-4 border-b space-x-2">
